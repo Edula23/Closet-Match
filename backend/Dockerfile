@@ -1,8 +1,9 @@
+# syntax=docker/dockerfile:1.7
 FROM node:22-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install -g npm@10.9.8 --unsafe-perm
-RUN npm ci --omit=dev
+RUN --mount=type=cache,target=/root/.npm npm ci --omit=dev --no-audit --no-fund
 COPY . .
 EXPOSE 5000
-CMD ["node", "src/server.js"]
+COPY entrypoint.sh ./entrypoint.sh
+CMD ["sh", "./entrypoint.sh"]

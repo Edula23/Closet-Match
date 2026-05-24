@@ -2,7 +2,6 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { use } from "react";
 import prisma from "../prismaClient.js";
 
 function normalizeEmail(email = "") {
@@ -15,10 +14,10 @@ function signToken(user) {
 
 export async function register(req, res) {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, username } = req.body;
     const normalizedEmail = normalizeEmail(email);
 
-    if (!name?.trim() || !normalizedEmail || !password) {
+    if (!name?.trim() || !normalizedEmail || !password || !username) {
       return res
         .status(400)
         .json({ message: "Name, email, and password are required." });
@@ -41,6 +40,7 @@ export async function register(req, res) {
         name,
         email: normalizedEmail,
         password: hashedPassword,
+        username: username.trim()
         },
     });
 

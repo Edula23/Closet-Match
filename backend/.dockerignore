@@ -1,0 +1,30 @@
+# dependencies
+node_modules
+npm-debug.log
+
+# env files
+.env
+.env.*
+
+# git
+.git
+.gitignore
+
+# editor files
+.vscode
+.idea
+
+# build output
+dist
+build
+coverage
+
+# prisma generated client
+src/generated
+
+# OS files
+.DS_Store
+
+# docker files that don't need copying
+docker-compose.yaml
+README.md
