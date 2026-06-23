@@ -8,8 +8,24 @@ function normalizeEmail(email = "") {
   return email.trim().toLowerCase();
 }
 
+function getAuthCookieOptions() {
+  const isProduction = process.env.NODE_ENV === "production";
+
+  return {
+    httpOnly: true,
+    sameSite: isProduction ? "none" : "lax",
+    secure: isProduction,
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  };
+}
+
 function signToken(user) {
-  return jwt.sign({ id: user.id, email: user.email, name: user.name }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign(
+    { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
 }
 
 export async function register(req, res) {
@@ -41,25 +57,27 @@ export async function register(req, res) {
         email: normalizedEmail,
         password: hashedPassword,
         username: username.trim()
-        },
+      },
     });
 
-    const token = signToken(newUser);
-    return res.status(201).json({ token, user: newUser });
+    const safeUser = { id: newUser.id, email: newUser.email, name: newUser.name, tokenVersion: newUser.tokenVersion };
+    const token = signToken(safeUser);
+    res.cookie("token", token, getAuthCookieOptions());
+    return res.status(201).json({ token, user: safeUser });
 
 
-}
-    catch (error) {
-        console.error("Register error:", error.message);
-        return res.status(500).json({ message: "Server error during registration." });
-    }
+  }
+  catch (error) {
+    console.error("Register error:", error.message);
+    return res.status(500).json({ message: "Server error during registration." });
+  }
 
 }
 
 export async function login(req, res) {
   try {
-    const { email, password } = req.body;
-    const normalizedEmail = normalizeEmail(email);
+    const { email, password, username } = req.body || {};
+    const normalizedEmail = normalizeEmail(email || username);
 
     if (!normalizedEmail || !password) {
       return res
@@ -79,8 +97,9 @@ export async function login(req, res) {
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
-    const safeUser = { id: user.id, email: user.email, name: user.name };
+    const safeUser = { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion };
     const token = signToken(safeUser);
+    res.cookie("token", token, getAuthCookieOptions());
     return res.json({ message: "Login Successful", token, user: safeUser });
   } catch (error) {
     console.error("Login error:", error.message);
@@ -102,5 +121,31 @@ export async function me(req, res) {
   } catch (error) {
     console.error("Me error:", error.message);
     return res.status(500).json({ message: "Server error fetching user data." });
+  }
+}
+
+export async function logout(req, res) {
+  try {
+    const userId = req.userId || req.user?.id;
+
+    if (userId) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: {
+          tokenVersion: { increment: 1 },
+        },
+      });
+    }
+
+    try {
+      res.clearCookie && res.clearCookie("token", getAuthCookieOptions());
+    } catch (e) {
+      // ignore cookie clearing errors
+    }
+
+    return res.json({ message: "Logout successful." });
+  } catch (error) {
+    console.error("Logout error:", error.message);
+    return res.status(500).json({ message: "Server error during logout." });
   }
 }
