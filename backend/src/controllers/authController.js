@@ -64,8 +64,6 @@ export async function register(req, res) {
     const token = signToken(safeUser);
     res.cookie("token", token, getAuthCookieOptions());
     return res.status(201).json({ token, user: safeUser });
-
-
   }
   catch (error) {
     console.error("Register error:", error.message);

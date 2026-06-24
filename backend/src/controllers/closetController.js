@@ -57,12 +57,140 @@ export async function postCloset(req, res) {
 
 }
 export async function getClosets(req, res) {
+    try {
+        const userId = req.userId || req.user?.id;
 
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized." });
+        }
 
+        const closets = await prisma.closet.findMany({
+            where: { userId },
+            orderBy: { createdAt: "desc" },
+            select: {
+                id: true,
+                userId: true,
+                fileName: true,
+                mimeType: true,
+                // imageHash: true,
+                // createdAt: true,
+                // updatedAt: true,
+                // image: true,
+            },
+        });
+
+        const formattedClosets = closets.map((closet) => ({
+            id: closet.id,
+            userId: closet.userId,
+            fileName: closet.fileName,
+            mimeType: closet.mimeType,
+            // imageHash: closet.imageHash,
+            // createdAt: closet.createdAt,
+            // updatedAt: closet.updatedAt,
+            // image: closet.image
+            //     ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
+            //     : null,
+        }));
+
+        return res.status(200).json({
+            closets: formattedClosets,
+        });
+    } catch (error) {
+        console.error("getClosets error:", error.message);
+        return res.status(500).json({ message: "Server error fetching closets." });
+    }
 }
 export async function getCloset(req, res) {
+    try {
+        const userId = req.userId || req.user?.id;
+        const closetId = Number(req.params.id);
 
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized." });
+        }
+
+        if (!Number.isInteger(closetId)) {
+            return res.status(400).json({ message: "Invalid closet id." });
+        }
+
+        const closet = await prisma.closet.findFirst({
+            where: {
+                id: closetId,
+                userId,
+            },
+            select: {
+                id: true,
+                userId: true,
+                fileName: true,
+                mimeType: true,
+                // imageHash: true,
+                // createdAt: true,
+                // updatedAt: true,
+                // image: true,
+            },
+        });
+
+        if (!closet) {
+            return res.status(404).json({ message: "Closet item not found." });
+        }
+
+        return res.status(200).json({
+            closet: {
+                id: closet.id,
+                userId: closet.userId,
+                fileName: closet.fileName,
+                mimeType: closet.mimeType,
+                // imageHash: closet.imageHash,
+                // createdAt: closet.createdAt,
+                // updatedAt: closet.updatedAt,
+                // image: closet.image
+                //     ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
+                //     : null,
+            },
+        });
+    } catch (error) {
+        console.error("getCloset error:", error.message);
+        return res.status(500).json({ message: "Server error fetching closet item." });
+    }
 }
 export async function deleteCloset(req, res) {
+    try {
+        const userId = req.userId || req.user?.id;
+        const closetId = Number(req.params.id);
 
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized." });
+        }
+
+        if (!Number.isInteger(closetId)) {
+            return res.status(400).json({ message: "Invalid closet id." });
+        }
+
+        const closet = await prisma.closet.findFirst({
+            where: {
+                id: closetId,
+                userId,
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        if (!closet) {
+            return res.status(404).json({ message: "Closet item not found." });
+        }
+
+        await prisma.closet.delete({
+            where: {
+                id: closetId,
+            },
+        });
+
+        return res.status(200).json({
+            message: "Closet item deleted successfully.",
+        });
+    } catch (error) {
+        console.error("deleteCloset error:", error.message);
+        return res.status(500).json({ message: "Server error deleting closet item." });
+    }
 }
