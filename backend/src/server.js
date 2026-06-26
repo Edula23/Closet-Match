@@ -3,6 +3,7 @@ import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import authRoutes from "./routes/authRoutes.js";
 import closetRoutes from "./routes/closetRoutes.js";
+import outfitRoutes from "./routes/outfitRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 //Routes
 app.use('/auth', authRoutes);
 app.use('/closet', closetRoutes);
+app.use('/outfit', outfitRoutes);
+app.use('/outfits', outfitRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server has started on port: ${PORT}`);
