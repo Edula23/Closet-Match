@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { Link } from "react-router-dom";
 const navLinks = ["Home", "About", "Courses", "Contact"];
 
 export default function HeroSection() {
@@ -24,10 +24,14 @@ export default function HeroSection() {
             </li>
           ))}
         </ul>
-
+          <Link to="/signup">
         <button className="hidden md:block bg-blue-500 hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full">
           Sign Up
-        </button>
+        </button></Link>
+          <Link to="/login">
+        <button className="hidden md:block bg-blue-500 hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full">
+          Sign In
+        </button></Link>
 
         {/* Mobile Hamburger */}
         <button
@@ -47,9 +51,16 @@ export default function HeroSection() {
               {link}
             </a>
           ))}
+          <Link to="/signup">
           <button className="mt-2 bg-blue-500 hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full w-fit">
             Sign Up
           </button>
+          </Link>
+          <Link to="/login">
+          <button className="mt-2 bg-blue-500 hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full w-fit">
+            Sign In
+          </button>
+          </Link>
         </div>
       )}
 

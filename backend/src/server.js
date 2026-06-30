@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import 'dotenv/config';
 import cors from "cors";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -34,10 +35,10 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 //Routes
-app.use('/auth', authRoutes);
-app.use('/closet', closetRoutes);
-app.use('/outfit', outfitRoutes);
-app.use('/outfits', outfitRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/closet', closetRoutes);
+app.use('/api/outfit', outfitRoutes);
+app.use('/api/outfits', outfitRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server has started on port: ${PORT}`);
