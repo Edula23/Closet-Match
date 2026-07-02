@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { ChangeEvent, SyntheticEvent } from "react";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 interface LoginForm {
   email: string;
   password: string;
@@ -15,7 +15,7 @@ export default function LoginPage() {
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({
       ...prev,
@@ -56,7 +56,8 @@ export default function LoginPage() {
       console.log(data);
 
       // TODO:
-      // navigate("/dashboard");
+      navigate("/dashboard");
+
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

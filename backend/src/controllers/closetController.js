@@ -41,6 +41,7 @@ export async function postCloset(req, res) {
                 fileName: true,
                 mimeType: true,
                 imageHash: true,
+                image: true,
                 createdAt: true,
                 updatedAt: true,
             },
@@ -72,10 +73,11 @@ export async function getClosets(req, res) {
                 userId: true,
                 fileName: true,
                 mimeType: true,
+                image: true,
                 // imageHash: true,
                 // createdAt: true,
                 // updatedAt: true,
-                // image: true,
+                
             },
         });
 
@@ -87,9 +89,9 @@ export async function getClosets(req, res) {
             // imageHash: closet.imageHash,
             // createdAt: closet.createdAt,
             // updatedAt: closet.updatedAt,
-            // image: closet.image
-            //     ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
-            //     : null,
+            image: closet.image
+                ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
+                : null,
         }));
 
         return res.status(200).json({
@@ -123,6 +125,7 @@ export async function getCloset(req, res) {
                 userId: true,
                 fileName: true,
                 mimeType: true,
+                image: true,
                 // imageHash: true,
                 // createdAt: true,
                 // updatedAt: true,
@@ -143,9 +146,9 @@ export async function getCloset(req, res) {
                 // imageHash: closet.imageHash,
                 // createdAt: closet.createdAt,
                 // updatedAt: closet.updatedAt,
-                // image: closet.image
-                //     ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
-                //     : null,
+                image: closet.image
+                    ? `data:${closet.mimeType || "application/octet-stream"};base64,${Buffer.from(closet.image).toString("base64")}`
+                    : null,
             },
         });
     } catch (error) {
