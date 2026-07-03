@@ -37,7 +37,6 @@ app.get("/", (req, res) => {
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/closet', closetRoutes);
-app.use('/api/outfit', outfitRoutes);
 app.use('/api/outfits', outfitRoutes);
 
 app.listen(PORT, () => {

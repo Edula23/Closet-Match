@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
-router.post("/", authMiddleware, upload.any(), postCloset);
+router.post("/", authMiddleware, upload.single("image"), postCloset);
 router.get("/", authMiddleware, getClosets);
 router.get("/:id", authMiddleware, getCloset);
 router.delete("/:id", authMiddleware, deleteCloset);
