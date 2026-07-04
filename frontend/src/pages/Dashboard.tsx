@@ -486,30 +486,6 @@ export default function Dashboard() {
             ))}
           </div>
         </section>
-
-        <section>
-          <h2 className="text-2xl font-semibold mb-6">Closet</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-            {closets.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => toggleCloset(item.id)}
-                className={`aspect-square rounded-lg overflow-hidden bg-white/5 ${
-                  selectedClosetIds.includes(item.id)
-                    ? "ring-4 ring-blue-500"
-                    : ""
-                }`}
-              >
-                <img
-                  src={item.image}
-                  alt={item.fileName}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   );
