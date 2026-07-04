@@ -57,8 +57,7 @@ async function loadUserClosets(userId, closetIds) {
 	if (!closetIds.length) {
 		return [];
 	}
-
-	return prisma.closet.findMany({
+	const items = await prisma.closet.findMany({
 		where: {
 			userId,
 			id: {
@@ -68,12 +67,20 @@ async function loadUserClosets(userId, closetIds) {
 		select: {
 			id: true,
 			userId: true,
+			image: true,	
 			fileName: true,
 			mimeType: true,
 			createdAt: true,
 			updatedAt: true,
 		},
 	});
+
+	return items.map((item) => ({
+		...item,
+		image: item.image
+			? `data:${item.mimeType || "application/octet-stream"};base64,${Buffer.from(item.image).toString("base64")}`
+			: null,
+	}));
 }
 
 function formatOutfit(outfit, closetItems = []) {
@@ -316,3 +323,4 @@ export async function deleteOutfit(req, res) {
 		return res.status(500).json({ message: "Server error deleting outfit." });
 	}
 }
+
