@@ -20,7 +20,7 @@ const __dirname = dirname(__filename);
 
 app.use(express.json());
 //Serves the html file from the /public directory
-app.use(express.static(path.join(__dirname, '../public')));
+// app.use(express.static(path.join(__dirname, '../public')));
 //tells express to serve all files from the public folder as static assets/files. Any requests for the css  files will be served from the public folder
 app.use(cookieParser());
 app.use(cors({
@@ -31,9 +31,9 @@ app.use(cors({
 }));
 
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
+// app.get("/", (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'index.html'))
+// })
 //Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/closet', closetRoutes);
