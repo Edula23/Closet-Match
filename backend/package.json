@@ -4,8 +4,10 @@
   "description": "A full stack outfit application that uses a NodeJs backend, a postgres sql database, a prisma orm, and JWT for authentication",
   "main": "index.js",
   "scripts": {
+    "build": "prisma generate",
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
+    "postinstall": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -22,13 +22,6 @@ const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     fetchCloset();
   }, []);
-  useEffect(() => {
-    async function getTodos() {
-      const { data } = await supabase.from("todos").select();
-      if (data) setTodos(data);
-    }
-    getTodos();
-  }, []);
 
   const fetchCloset = async () => {
     const res = await fetch("/api/closet", {
