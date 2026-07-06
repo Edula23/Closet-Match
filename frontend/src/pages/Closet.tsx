@@ -7,8 +7,16 @@ export default function Closet() {
     mimeType: string;
     image: string;
   }
-  const [todos, setTodos] = useState([]);
+  // interface Outfit {
+  //   id: number;
+  //   userId: number;
+  //   name: string;
+  //   description: string;
+  //   closetIds: number[];
+  //   closetItems: Closet[];
+  // }
   const [closets, setCloset] = useState<Closet[]>([]);
+  // const [outfits, setOutfits] = useState<Outfit[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -22,6 +30,25 @@ const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     fetchCloset();
   }, []);
+  // useEffect(() => {
+  //   fetchOutfits();
+  // }, []);
+  //  const fetchOutfits = async () => {
+  //   const res = await fetch("/api/outfits", {
+  //     credentials: "include",
+  //   });
+
+  //   if (!res.ok) {
+  //     console.log("Couldn't fetch outfits");
+  //     return;
+  //   }
+
+  //   const data = await res.json();
+  //   console.log(data);
+  //   setOutfits(data.outfits);
+  //   console.log(data);
+  // };
+
 
   const fetchCloset = async () => {
     const res = await fetch("/api/closet", {
@@ -76,7 +103,7 @@ const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const data = await res.json();
     if (res.ok) {
       console.log("Outfit created:", data);
-      fetchOutfits();
+      // fetchOutfits();
       setSelectedClosetIds([]);
       setOutfitName("");
       setDescription("");
@@ -120,11 +147,6 @@ const deleteClothing = async (id: number) => {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-[#0a0a2e] via-[#0d1b6e] to-[#0a0a2e] text-white font-sans">
-      <ul>
-      {todos.map((todo) => (
-        <li key={todo.id}>{todo.name}</li>
-      ))}
-    </ul>
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10">
         <div className="text-xl font-bold tracking-tight">
           <span className="text-white">Closet</span>

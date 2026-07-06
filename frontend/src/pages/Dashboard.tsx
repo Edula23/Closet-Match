@@ -119,15 +119,15 @@ export default function Dashboard() {
         : [...prev, id],
     );
   };
-  const openOutfit = (outfit: Outfit) => {
-    setSelectedOutfit(outfit);
-    setEditClosetIds(outfit.closetIds);
-    setIsEditing(false);
-  };
+  // const openOutfit = (outfit: Outfit) => {
+  //   setSelectedOutfit(outfit);
+  //   setEditClosetIds(outfit.closetIds);
+  //   setIsEditing(false);
+  // };
 
   // Deterministic "randomness" so each item's scatter position/rotation
   // stays stable across re-renders instead of jumping around.
-  const scatterSeed = (id) => {
+  const scatterSeed = (id: number) => {
     const str = String(id);
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
