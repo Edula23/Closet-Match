@@ -1,5 +1,5 @@
 import prisma from '../prismaClient.js';
-
+import { getOutfitSuggestion } from '../services/aiMatch.js';
 function parseIntegerList(value) {
 	if (Array.isArray(value)) {
 		return value
@@ -67,7 +67,7 @@ async function loadUserClosets(userId, closetIds) {
 		select: {
 			id: true,
 			userId: true,
-			image: true,	
+			image: true,
 			fileName: true,
 			mimeType: true,
 			createdAt: true,
@@ -323,4 +323,20 @@ export async function deleteOutfit(req, res) {
 		return res.status(500).json({ message: "Server error deleting outfit." });
 	}
 }
+export async function suggestOutfit(req, res) {
+	try {
+		const { targetItemId } = req.body;
+		const targetItem = await prisma.closet.findUnique({ where: { id: targetItemId } });
+		const closetItems = await prisma.closet.findMany({
+			where: { userId: req.userId, id: { not: targetItemId } },
+		});
+
+		const result = await getOutfitSuggestion(targetItem, closetItems);
+		res.json(result);
+	} catch (err) {
+		console.error("AI match error:", err);
+		res.status(500).json({ message: "Failed to generate suggestion" });
+	}
+}
+
 
