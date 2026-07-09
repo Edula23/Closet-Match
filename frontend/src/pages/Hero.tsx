@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import heroimage2 from "../assets/heroImg.jpg";
-const navLinks = ["Home", "About", "Courses", "Contact"];
+// const navLinks = ["Home", "About", "Courses", "Contact"];
 
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false);
