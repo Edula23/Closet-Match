@@ -46,9 +46,7 @@ export default function Dashboard() {
     }
 
     const data = await res.json();
-    console.log(data);
     setOutfits(data.outfits);
-    console.log(data);
   };
 
   const fetchCloset = async () => {
@@ -61,7 +59,6 @@ export default function Dashboard() {
     }
 
     const data = await res.json();
-    console.log(data);
     setCloset(data.closets);
   };
 
@@ -80,7 +77,6 @@ export default function Dashboard() {
     const data = await res.json();
 
     if (res.ok) {
-      console.log("Upload successful:", data);
       setShowUploadModal(false);
       fetchCloset();
       setSelectedFile(null);
@@ -101,9 +97,7 @@ export default function Dashboard() {
         closetIds: selectedClosetIds,
       }),
     });
-    const data = await res.json();
     if (res.ok) {
-      console.log("Outfit created:", data);
       fetchOutfits();
       setSelectedClosetIds([]);
       setOutfitName("");
@@ -119,14 +113,7 @@ export default function Dashboard() {
         : [...prev, id],
     );
   };
-  // const openOutfit = (outfit: Outfit) => {
-  //   setSelectedOutfit(outfit);
-  //   setEditClosetIds(outfit.closetIds);
-  //   setIsEditing(false);
-  // };
 
-  // Deterministic "randomness" so each item's scatter position/rotation
-  // stays stable across re-renders instead of jumping around.
   const scatterSeed = (id: number) => {
     const str = String(id);
     let hash = 0;
@@ -150,7 +137,7 @@ export default function Dashboard() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({closetIds: editClosetIds}),
+      body: JSON.stringify({ closetIds: editClosetIds }),
     });
     const data = await res.json();
     setSaving(false);
@@ -160,38 +147,55 @@ export default function Dashboard() {
     }
     setOutfits((prev) =>
       prev.map((outfit) =>
-        outfit.id === selectedOutfit.id ? data.outfit : outfit))
-  ;
+        outfit.id === selectedOutfit.id ? data.outfit : outfit),
+    );
     setSelectedOutfit(data.outfit);
     setIsEditing(false);
   };
+
+  const logout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (res.ok) {
+        window.location.href = "/login";
+      } else {
+        console.log("Logout failed");
+      }
+    } catch (err) {
+      console.log("Logout error:", err);
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0a0a2e] via-[#0d1b6e] to-[#0a0a2e] text-white font-sans">
+    <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10">
         <div className="text-xl font-bold tracking-tight">
-          <span className="text-white">Closet</span>
-          <span className="text-blue-400">Match</span>
+          <span className="text-[#661218]">Closet</span>
+          <span className="text-[#661218]">Match</span>
         </div>
 
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
             onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-colors"
+            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
           >
             + Add Closet
           </button>
           <button
-            onClick={() => setShowOutfitModal(true)}
-            className="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
+            onClick={logout}
+            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
           >
-            + Add Outfit
+            Logout
           </button>
         </ul>
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden text-white text-2xl"
+          className="md:hidden text-[#661218] text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -200,27 +204,35 @@ export default function Dashboard() {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col gap-3 px-6 pb-5 text-sm">
+        <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
           <button
             onClick={() => {
               setShowUploadModal(true);
               setMenuOpen(false);
             }}
-            className="text-left px-4 py-2 rounded-full border border-white/20"
+            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2  border-white/20"
           >
             + Add Closet
           </button>
           <button
             onClick={() => {
-              setShowOutfitModal(true);
+              logout();
               setMenuOpen(false);
             }}
-            className="text-left px-4 py-2 rounded-full bg-blue-500"
+            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
           >
-            + Add Outfit
+            Logout
           </button>
         </div>
       )}
+
+      {/* Floating Add Outfit button — fixed to viewport, stays on scroll */}
+      <button
+        onClick={() => setShowOutfitModal(true)}
+        className="fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-[#661218] hover:bg-[#550f14] transition-colors shadow-lg text-sm font-medium flex items-center gap-2"
+      >
+        + Add Outfit
+      </button>
 
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
@@ -257,7 +269,6 @@ export default function Dashboard() {
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Create outfit</h2>
 
-            {/* Outfit name */}
             <input
               type="text"
               placeholder="Outfit name"
@@ -266,7 +277,6 @@ export default function Dashboard() {
               onChange={(e) => setOutfitName(e.target.value)}
             />
 
-            {/* Description */}
             <input
               type="text"
               placeholder="Description"
@@ -279,7 +289,6 @@ export default function Dashboard() {
               Select clothes
             </h3>
 
-            {/* Closet items selection */}
             <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mb-5">
               {closets.map((item) => (
                 <button
@@ -301,7 +310,6 @@ export default function Dashboard() {
               ))}
             </div>
 
-            {/* Buttons */}
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowOutfitModal(false)}
@@ -320,126 +328,83 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-      {/* {selectedOutfit && (
+
+      {selectedOutfit && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
           onClick={() => setSelectedOutfit(null)}
         >
           <div
             className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto"
-            onClick={(e) => e.stopPropagation()} // prevents backdrop click from closing when clicking inside
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-bold">{selectedOutfit.name}</h2>
-              <button
-                onClick={() => setSelectedOutfit(null)}
-                className="text-xl"
-              >
-                ✕
-              </button>
+              <div className="flex gap-3 items-center">
+                <button
+                  onClick={() => setIsEditing((prev) => !prev)}
+                  className="text-sm text-blue-500"
+                >
+                  {isEditing ? "Cancel" : "Edit"}
+                </button>
+                <button onClick={() => setSelectedOutfit(null)} className="text-xl">
+                  ✕
+                </button>
+              </div>
             </div>
 
             {selectedOutfit.description && (
-              <p className="text-sm text-gray-500 mb-4">
-                {selectedOutfit.description}
-              </p>
+              <p className="text-sm text-gray-500 mb-4">{selectedOutfit.description}</p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {selectedOutfit.closetItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="border rounded-md overflow-hidden"
-                >
-                  <img
-                    src={item.image}
-                    alt={item.fileName}
-                    className="w-full h-32 object-cover"
-                  />
+            {!isEditing ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {selectedOutfit.closetItems.map((item) => (
+                  <div key={item.id} className="border rounded-md overflow-hidden">
+                    <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                  {closets.map((item) => {
+                    const included = editClosetIds.includes(item.id);
+                    return (
+                      <div
+                        key={item.id}
+                        onClick={() => toggleClosetItem(item.id)}
+                        className={`relative border rounded-md overflow-hidden cursor-pointer ${
+                          included ? "ring-2 ring-blue-500" : "opacity-50"
+                        }`}
+                      >
+                        <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                        {included && (
+                          <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                            ✓
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
+
+                <button
+                  onClick={saveOutfit}
+                  disabled={saving}
+                  className="w-full bg-blue-500 text-white py-2 rounded-md disabled:opacity-50"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </>
+            )}
           </div>
         </div>
-      )} */}
-      {selectedOutfit && (
-  <div
-    className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    onClick={() => setSelectedOutfit(null)}
-  >
-    <div
-      className="bg-white rounded-lg p-6 max-w-lg w-full max-h-[80vh] overflow-y-auto"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-bold">{selectedOutfit.name}</h2>
-        <div className="flex gap-3 items-center">
-          <button
-            onClick={() => setIsEditing((prev) => !prev)}
-            className="text-sm text-blue-500"
-          >
-            {isEditing ? "Cancel" : "Edit"}
-          </button>
-          <button onClick={() => setSelectedOutfit(null)} className="text-xl">
-            ✕
-          </button>
-        </div>
-      </div>
-
-      {selectedOutfit.description && (
-        <p className="text-sm text-gray-500 mb-4">{selectedOutfit.description}</p>
       )}
-
-      {!isEditing ? (
-        // VIEW MODE
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {selectedOutfit.closetItems.map((item) => (
-            <div key={item.id} className="border rounded-md overflow-hidden">
-              <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        // EDIT MODE — show ALL closet items, checked if selected
-        <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
-            {closets.map((item) => {
-              const included = editClosetIds.includes(item.id);
-              return (
-                <div
-                  key={item.id}
-                  onClick={() => toggleClosetItem(item.id)}
-                  className={`relative border rounded-md overflow-hidden cursor-pointer ${
-                    included ? "ring-2 ring-blue-500" : "opacity-50"
-                  }`}
-                >
-                  <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
-                  {included && (
-                    <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      ✓
-                    </span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-
-          <button
-            onClick={saveOutfit}
-            disabled={saving}
-            className="w-full bg-blue-500 text-white py-2 rounded-md disabled:opacity-50"
-          >
-            {saving ? "Saving..." : "Save Changes"}
-          </button>
-        </>
-      )}
-    </div>
-  </div>
-)}
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section className="mb-12">
-          <h1 className="text-2xl font-semibold mb-6">My outfits</h1>
+          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">My outfits</h1>
 
           {outfits.length === 0 && (
             <p className="text-sm text-white/60">
@@ -454,13 +419,13 @@ export default function Dashboard() {
                 onClick={() => setSelectedOutfit(outfit)}
                 className="cursor-pointer rounded-lg p-3 hover:shadow-md transition"
               >
-                <h2 className="text-base font-medium mb-3">{outfit.name}</h2>
+                <h2 className="text-base text-[#661218] font-medium mb-3">{outfit.name}</h2>
 
                 <div className="flex flex-wrap items-end pt-4 pb-2">
                   {outfit.closetItems.map((item, i) => {
                     const seed = scatterSeed(item.id) + i * 7;
-                    const rotate = (seed % 21) - 10; // -10deg to 10deg
-                    const lift = (seed % 17) - 8; // -8px to 8px
+                    const rotate = (seed % 21) - 10;
+                    const lift = (seed % 17) - 8;
                     return (
                       <div
                         key={item.id}
@@ -469,7 +434,7 @@ export default function Dashboard() {
                           zIndex: i,
                           marginLeft: i === 0 ? 0 : "-4.75rem",
                         }}
-                        className="relative w-24 sm:w-28 shrink-0 bg-white p-1.5 pb-3 rounded-sm shadow-lg transition-transform duration-200 hover:-translate-y-2 hover:rotate-0 hover:z-40"
+                        className="relative w-24 sm:w-28 shrink-0 bg-transparent p-1.5 pb-3 rounded-sm border-[#661218] border shadow-lg transition-transform duration-200 hover:-translate-y-2 hover:rotate-0 hover:z-40"
                       >
                         <div className="aspect-square overflow-hidden bg-gray-100">
                           <img
