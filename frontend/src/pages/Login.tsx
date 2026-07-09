@@ -70,18 +70,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0B1220] px-4">
-      <div className="w-full max-w-md rounded-2xl border border-[#26334C] bg-[#0F1729] p-8 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-[#d0cac3] px-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#26334C] bg-[#561c24] p-8 shadow-2xl">
 
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#E8A33D] mb-3">
-          auth.login()
-        </p>
 
         <h1 className="text-3xl font-bold text-white mb-2">
           Welcome Back
         </h1>
 
-        <p className="text-[#8C9BB5] mb-8">
+        <p className="text-white mb-8">
           Sign in to continue to your Closet Match account.
         </p>
 
@@ -89,7 +86,7 @@ export default function LoginPage() {
           <div>
             <label
               htmlFor="email"
-              className="block mb-2 text-sm text-[#8C9BB5]"
+              className="block mb-2 text-sm text-white"
             >
               Email
             </label>
@@ -101,14 +98,14 @@ export default function LoginPage() {
               value={form.email}
               onChange={handleChange}
               placeholder="john@example.com"
-              className="w-full rounded-lg border border-[#26334C] bg-[#141E33] px-4 py-3 text-white placeholder-[#5C6B85] outline-none focus:border-[#E8A33D]"
+              className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="block mb-2 text-sm text-[#8C9BB5]"
+              className="block mb-2 text-sm text-white"
             >
               Password
             </label>
@@ -120,7 +117,7 @@ export default function LoginPage() {
               value={form.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full rounded-lg border border-[#26334C] bg-[#141E33] px-4 py-3 text-white placeholder-[#5C6B85] outline-none focus:border-[#E8A33D]"
+              className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
             />
           </div>
 
@@ -131,7 +128,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-[#E8A33D] py-3 font-semibold text-[#0B1220] transition hover:bg-[#F2B458] disabled:opacity-60"
+            className="w-full rounded-lg bg-white py-3 font-semibold text-[#0B1220] transition hover:bg-[#F2B458] disabled:opacity-60"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
