@@ -190,32 +190,26 @@ export default function Closet() {
 };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-[#0a0a2e] via-[#0d1b6e] to-[#0a0a2e] text-white font-sans">
+    <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10">
         <div className="text-xl font-bold tracking-tight">
-          <span className="text-white">Closet</span>
-          <span className="text-blue-400">Match</span>
+          <span className="text-[#661218]">Closet</span>
+          <span className="text-[#661218]">Match</span>
         </div>
 
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
             onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-colors"
+            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
           >
             + Add Closet
-          </button>
-          <button
-            onClick={() => setShowOutfitModal(true)}
-            className="px-4 py-2 rounded-full bg-blue-500 hover:bg-blue-600 transition-colors"
-          >
-            + Add Outfit
           </button>
         </ul>
 
         {/* Mobile Hamburger */}
         <button
-          className="md:hidden text-white text-2xl"
+          className="md:hidden text-[#661218] text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
@@ -224,27 +218,26 @@ export default function Closet() {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col gap-3 px-6 pb-5 text-sm">
+        <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
           <button
             onClick={() => {
               setShowUploadModal(true);
               setMenuOpen(false);
             }}
-            className="text-left px-4 py-2 rounded-full border border-white/20"
+            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
           >
             + Add Closet
           </button>
-          <button
-            onClick={() => {
-              setShowOutfitModal(true);
-              setMenuOpen(false);
-            }}
-            className="text-left px-4 py-2 rounded-full bg-blue-500"
-          >
-            + Add Outfit
-          </button>
         </div>
       )}
+
+      {/* Floating Add Outfit button — fixed to viewport, stays on scroll */}
+      <button
+        onClick={() => setShowOutfitModal(true)}
+        className="fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-[#661218] hover:bg-[#550f14] transition-colors shadow-lg text-sm font-medium flex items-center gap-2"
+      >
+        + Add Outfit
+      </button>
 
       {showUploadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
@@ -404,7 +397,7 @@ export default function Closet() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
-          <h2 className="text-2xl font-semibold mb-6">Closet</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">Closet</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {closets.map((item) => (
               <div key={item.id} className="relative aspect-square group">
