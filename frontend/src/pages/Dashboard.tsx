@@ -28,6 +28,14 @@ export default function Dashboard() {
   const [isEditing, setIsEditing] = useState(false);
   const [editClosetIds, setEditClosetIds] = useState<number[]>([]);
   const [saving, setSaving] = useState(false);
+  const [matchLoading, setMatchLoading] = useState(false);
+  const [matchResult, setMatchResult] = useState<{
+    suggested_item_ids: string[];
+    reasoning: string;
+  } | null>(null);
+  const [showMatchModal, setShowMatchModal] = useState(false);
+  const [matchTargetItem, setMatchTargetItem] = useState<Closet | null>(null);
+
   useEffect(() => {
     fetchOutfits();
   }, []);
@@ -151,6 +159,46 @@ export default function Dashboard() {
     );
     setSelectedOutfit(data.outfit);
     setIsEditing(false);
+  };
+
+  const matchOutfit = async (id: number) => {
+    setMatchLoading(true);
+
+    const target = closets.find((item) => item.id === id) || null;
+    setMatchTargetItem(target);
+
+    try {
+      const res = await fetch("/api/outfits/suggest", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ targetItemId: id }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.message || "Couldn't generate a match");
+        return;
+      }
+      setMatchResult(data);
+      setShowMatchModal(true);
+    } catch (err) {
+      console.error("Match error:", err);
+      alert("Something went wrong generating a match");
+    } finally {
+      setMatchLoading(false);
+    }
+  };
+
+  const addMatchToSelection = () => {
+    if (!matchTargetItem || !matchResult) return;
+
+    const matchedIds = matchResult.suggested_item_ids.map((id) => Number(id));
+    const allIds = [matchTargetItem.id, ...matchedIds];
+
+    setSelectedClosetIds((prev) => Array.from(new Set([...prev, ...allIds])));
+    setShowMatchModal(false);
+    setMatchTargetItem(null);
+    setMatchResult(null);
   };
 
   const logout = async () => {
@@ -289,24 +337,37 @@ export default function Dashboard() {
               Select clothes
             </h3>
 
-            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 mb-5">
+            <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 mb-5">
               {closets.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => toggleCloset(item.id)}
-                  className={`aspect-square rounded-lg overflow-hidden border-2 ${
-                    selectedClosetIds.includes(item.id)
-                      ? "border-blue-500"
-                      : "border-transparent"
-                  }`}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.fileName}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
+                <div key={item.id} className="relative aspect-square group">
+                  <button
+                    type="button"
+                    onClick={() => toggleCloset(item.id)}
+                    className={`w-full h-full rounded-lg overflow-hidden border-2 ${
+                      selectedClosetIds.includes(item.id)
+                        ? "border-blue-500"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      matchOutfit(item.id);
+                    }}
+                    className="absolute top-1 left-1 bg-blue-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                    aria-label="Match with closet"
+                  >
+                    ✨
+                  </button>
+                </div>
               ))}
             </div>
 
@@ -323,6 +384,64 @@ export default function Dashboard() {
                 className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
               >
                 Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {matchLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
+            Finding the best match... ✨
+          </div>
+        </div>
+      )}
+
+      {showMatchModal && matchResult && matchTargetItem && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] px-4">
+          <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
+            <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
+
+            <p className="text-xs font-medium text-gray-500 mb-2">Selected item</p>
+            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
+              <img
+                src={matchTargetItem.image}
+                alt={matchTargetItem.fileName}
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            <p className="text-center text-xs text-gray-400 mb-3">pairs well with</p>
+
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {closets
+                .filter((item) => matchResult.suggested_item_ids.includes(String(item.id)))
+                .map((item) => (
+                  <div key={item.id} className="aspect-square rounded-lg overflow-hidden">
+                    <img src={item.image} alt={item.fileName} className="w-full h-full object-cover" />
+                  </div>
+                ))}
+            </div>
+
+            <p className="text-sm text-gray-600 mb-5">{matchResult.reasoning}</p>
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setShowMatchModal(false);
+                  setMatchTargetItem(null);
+                  setMatchResult(null);
+                }}
+                className="px-4 py-2 text-sm rounded-full border border-gray-300 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={addMatchToSelection}
+                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Add to Outfit
               </button>
             </div>
           </div>
