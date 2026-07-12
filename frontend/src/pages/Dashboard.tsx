@@ -265,7 +265,6 @@ export default function Dashboard() {
               My Closet
             </button>
           </Link>
-          <Link className=" ml-auto">
           <button
             onClick={() => {
               logout();
@@ -275,7 +274,6 @@ export default function Dashboard() {
           >
             Logout
           </button>
-          </Link>
         </div>
       )}
 

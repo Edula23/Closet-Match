@@ -248,7 +248,6 @@ const logout = async () => {
               My Outfits
             </button>
           </Link>
-           <Link className="ml-auto">
           <button
             onClick={() => {
               logout();
@@ -258,7 +257,6 @@ const logout = async () => {
           >
             Logout
           </button>
-          </Link>
         </div>
       )}
 
