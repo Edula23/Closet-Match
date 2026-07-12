@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 export default function Closet() {
   interface Closet {
     id: number;
@@ -188,6 +189,21 @@ export default function Closet() {
   setShowMatchModal(false);
   setShowOutfitModal(true); // reuse your existing outfit modal
 };
+const logout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (res.ok) {
+        window.location.href = "/login";
+      } else {
+        console.log("Logout failed");
+      }
+    } catch (err) {
+      console.log("Logout error:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
@@ -200,11 +216,18 @@ export default function Closet() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
-            onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            onClick={logout}
+            className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
           >
-            + Add Closet
+            Logout
           </button>
+          <Link to="/dashboard">
+            <button
+              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            >
+              My Outfits
+            </button>
+          </Link>
         </ul>
 
         {/* Mobile Hamburger */}
@@ -219,28 +242,36 @@ export default function Closet() {
 
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
+          
+          <Link to="/dashboard" className=" ml-auto">
+            <button className="bg-[#661218] text-white  ml:auto hover:bg-[#550f14] transition-colors text-sm font-medium px-5 py-2 rounded-full">
+              My Outfits
+            </button>
+          </Link>
+           <Link className="ml-auto">
           <button
             onClick={() => {
-              setShowUploadModal(true);
+              logout();
               setMenuOpen(false);
             }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
+            className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
-            + Add Closet
+            Logout
           </button>
+          </Link>
         </div>
       )}
 
       {/* Floating Add Outfit button — fixed to viewport, stays on scroll */}
       <button
-        onClick={() => setShowOutfitModal(true)}
+        onClick={() => setShowUploadModal(true)}
         className="fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-[#661218] hover:bg-[#550f14] transition-colors shadow-lg text-sm font-medium flex items-center gap-2"
       >
-        + Add Outfit
+        + Add Closet
       </button>
 
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-sm shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Upload closet item</h2>
             <input
@@ -260,7 +291,7 @@ export default function Closet() {
               </button>
               <button
                 onClick={uploadClothing}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Upload
               </button>
@@ -338,20 +369,19 @@ export default function Closet() {
         </div>
       )}
       {matchLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50">
+          <div className="bg-[#550f14] text-white px-6 py-4 rounded-xl shadow-xl border-2 border-[#661218] text-sm">
             Finding the best match... ✨
           </div>
         </div>
       )}
 
       {showMatchModal && matchResult && matchTargetItem && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+  <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
     <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-      <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
+      <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
 
-      <p className="text-xs font-medium text-gray-500 mb-2">Selected item</p>
-      <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
+      <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
         <img
           src={matchTargetItem.image}
           alt={matchTargetItem.fileName}
@@ -386,7 +416,7 @@ export default function Closet() {
         </button>
         <button
           onClick={saveMatchAsOutfit}
-          className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+          className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
         >
           Save as Outfit
         </button>
@@ -397,8 +427,8 @@ export default function Closet() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">Closet</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">My Closet</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {closets.map((item) => (
               <div key={item.id} className="relative aspect-square group">
                 <button
@@ -434,7 +464,7 @@ export default function Closet() {
                     e.stopPropagation();
                     matchOutfit(item.id);
                   }}
-                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-blue-500 text-white w-6 h-6 rounded-full items-center justify-center text-xs"
+                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-[#661218] text-white w-6 h-6 rounded-full items-center justify-center text-xs"
                   aria-label="Match with closet"
                 >
                   ✨
@@ -444,18 +474,18 @@ export default function Closet() {
                 {/* Mobile: long-press delete/match overlay */}
                 {longPressId === item.id && (
                   <div
-                    className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 rounded-lg sm:hidden"
+                    className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-6 rounded-lg sm:hidden"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
                       onClick={() => matchOutfit(item.id)}
-                      className="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-md w-24"
+                      className="bg-[#661218] text-white text-xs px-4 py-2 rounded-md w-30"
                     >
                       ✨ Match
                     </button>
                     <button
                       onClick={() => deleteClothing(item.id)}
-                      className="bg-red-500 text-white text-xs px-3 py-1.5 rounded-md w-24"
+                      className="bg-red-500 text-white text-xs px-4 py-2 rounded-md w-30"
                     >
                       Delete
                     </button>

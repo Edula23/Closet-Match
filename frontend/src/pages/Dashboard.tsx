@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 export default function Dashboard() {
   interface Closet {
     id: number;
@@ -133,7 +134,9 @@ export default function Dashboard() {
 
   const toggleClosetItem = (id: number) => {
     setEditClosetIds((prev) =>
-      prev.includes(id) ? prev.filter((closetId) => closetId !== id) : [...prev, id],
+      prev.includes(id)
+        ? prev.filter((closetId) => closetId !== id)
+        : [...prev, id],
     );
   };
   const saveOutfit = async () => {
@@ -155,7 +158,8 @@ export default function Dashboard() {
     }
     setOutfits((prev) =>
       prev.map((outfit) =>
-        outfit.id === selectedOutfit.id ? data.outfit : outfit),
+        outfit.id === selectedOutfit.id ? data.outfit : outfit,
+      ),
     );
     setSelectedOutfit(data.outfit);
     setIsEditing(false);
@@ -228,17 +232,18 @@ export default function Dashboard() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
-            onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-          >
-            + Add Closet
-          </button>
-          <button
             onClick={logout}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
           >
             Logout
           </button>
+          <Link to="/closet">
+            <button
+              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            >
+              My Closet
+            </button>
+          </Link>
         </ul>
 
         {/* Mobile Hamburger */}
@@ -253,24 +258,24 @@ export default function Dashboard() {
 
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
-          <button
-            onClick={() => {
-              setShowUploadModal(true);
-              setMenuOpen(false);
-            }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2  border-white/20"
-          >
-            + Add Closet
-          </button>
+          <Link className=" ml-auto" to="/closet">
+            <button
+              className="bg-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full"
+            >
+              My Closet
+            </button>
+          </Link>
+          <Link className=" ml-auto">
           <button
             onClick={() => {
               logout();
               setMenuOpen(false);
             }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
+            className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
             Logout
           </button>
+          </Link>
         </div>
       )}
 
@@ -283,7 +288,7 @@ export default function Dashboard() {
       </button>
 
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-sm shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Upload closet item</h2>
             <input
@@ -303,7 +308,7 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={uploadClothing}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Upload
               </button>
@@ -313,14 +318,14 @@ export default function Dashboard() {
       )}
 
       {showOutfitModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Create outfit</h2>
 
             <input
               type="text"
               placeholder="Outfit name"
-              className="border border-gray-300 rounded-lg p-2.5 w-full mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 rounded-lg p-2.5 w-full mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#661218]"
               value={outfitName}
               onChange={(e) => setOutfitName(e.target.value)}
             />
@@ -328,7 +333,7 @@ export default function Dashboard() {
             <input
               type="text"
               placeholder="Description"
-              className="border border-gray-300 rounded-lg p-2.5 w-full mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 rounded-lg p-2.5 w-full mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#661218]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -345,7 +350,7 @@ export default function Dashboard() {
                     onClick={() => toggleCloset(item.id)}
                     className={`w-full h-full rounded-lg overflow-hidden border-2 ${
                       selectedClosetIds.includes(item.id)
-                        ? "border-blue-500"
+                        ? "border-[#661218]"
                         : "border-transparent"
                     }`}
                   >
@@ -362,7 +367,7 @@ export default function Dashboard() {
                       e.stopPropagation();
                       matchOutfit(item.id);
                     }}
-                    className="absolute top-1 left-1 bg-blue-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                    className="absolute top-1 left-1 bg-[#661218] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     aria-label="Match with closet"
                   >
                     ✨
@@ -381,7 +386,7 @@ export default function Dashboard() {
 
               <button
                 onClick={createOutfit}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Create
               </button>
@@ -391,20 +396,22 @@ export default function Dashboard() {
       )}
 
       {matchLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
-          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-[60]">
+          <div className="bg-[#550f14] text-white px-6 py-4 rounded-xl shadow-xl text-sm">
             Finding the best match... ✨
           </div>
         </div>
       )}
 
       {showMatchModal && matchResult && matchTargetItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-60 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-            <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
+            <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
 
-            <p className="text-xs font-medium text-gray-500 mb-2">Selected item</p>
-            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
+            <p className="text-xs font-medium text-gray-500 mb-2">
+              Selected item
+            </p>
+            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
               <img
                 src={matchTargetItem.image}
                 alt={matchTargetItem.fileName}
@@ -412,19 +419,32 @@ export default function Dashboard() {
               />
             </div>
 
-            <p className="text-center text-xs text-gray-400 mb-3">pairs well with</p>
+            <p className="text-center text-xs text-gray-400 mb-3">
+              pairs well with
+            </p>
 
             <div className="grid grid-cols-3 gap-2 mb-4">
               {closets
-                .filter((item) => matchResult.suggested_item_ids.includes(String(item.id)))
+                .filter((item) =>
+                  matchResult.suggested_item_ids.includes(String(item.id)),
+                )
                 .map((item) => (
-                  <div key={item.id} className="aspect-square rounded-lg overflow-hidden">
-                    <img src={item.image} alt={item.fileName} className="w-full h-full object-cover" />
+                  <div
+                    key={item.id}
+                    className="aspect-square rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 ))}
             </div>
 
-            <p className="text-sm text-gray-600 mb-5">{matchResult.reasoning}</p>
+            <p className="text-sm text-gray-600 mb-5">
+              {matchResult.reasoning}
+            </p>
 
             <div className="flex justify-end gap-2">
               <button
@@ -439,7 +459,7 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={addMatchToSelection}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Add to Outfit
               </button>
@@ -458,7 +478,7 @@ export default function Dashboard() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">{selectedOutfit.name}</h2>
+              <h2 className="text-lg text-[#550f14] font-bold">{selectedOutfit.name}</h2>
               <div className="flex gap-3 items-center">
                 <button
                   onClick={() => setIsEditing((prev) => !prev)}
@@ -466,21 +486,33 @@ export default function Dashboard() {
                 >
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
-                <button onClick={() => setSelectedOutfit(null)} className="text-xl">
+                <button
+                  onClick={() => setSelectedOutfit(null)}
+                  className="text-xl"
+                >
                   ✕
                 </button>
               </div>
             </div>
 
             {selectedOutfit.description && (
-              <p className="text-sm text-gray-500 mb-4">{selectedOutfit.description}</p>
+              <p className="text-sm text-gray-800 mb-4">
+                {selectedOutfit.description}
+              </p>
             )}
 
             {!isEditing ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {selectedOutfit.closetItems.map((item) => (
-                  <div key={item.id} className="border rounded-md overflow-hidden">
-                    <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                  <div
+                    key={item.id}
+                    className="border rounded-md overflow-hidden"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-32 object-cover"
+                    />
                   </div>
                 ))}
               </div>
@@ -494,12 +526,16 @@ export default function Dashboard() {
                         key={item.id}
                         onClick={() => toggleClosetItem(item.id)}
                         className={`relative border rounded-md overflow-hidden cursor-pointer ${
-                          included ? "ring-2 ring-blue-500" : "opacity-50"
+                          included ? "ring-2 ring-[#661218]" : "opacity-50"
                         }`}
                       >
-                        <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                        <img
+                          src={item.image}
+                          alt={item.fileName}
+                          className="w-full h-32 object-cover"
+                        />
                         {included && (
-                          <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          <span className="absolute top-1 right-1 bg-[#661218] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             ✓
                           </span>
                         )}
@@ -511,7 +547,7 @@ export default function Dashboard() {
                 <button
                   onClick={saveOutfit}
                   disabled={saving}
-                  className="w-full bg-blue-500 text-white py-2 rounded-md disabled:opacity-50"
+                  className="w-full bg-[#661218] text-white py-2 rounded-md disabled:opacity-50"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
@@ -523,24 +559,28 @@ export default function Dashboard() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section className="mb-12">
-          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">My outfits</h1>
+          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
+            My outfits
+          </h1>
 
           {outfits.length === 0 && (
-            <p className="text-sm text-white/60">
-              No outfits yet — create one from your closet items.
+            <p className="text-sm text-[#551214] mb-6">
+              No outfits yet create one from your closet items.
             </p>
           )}
 
-          <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {outfits.map((outfit) => (
               <div
                 key={outfit.id}
                 onClick={() => setSelectedOutfit(outfit)}
-                className="cursor-pointer rounded-lg p-3 hover:shadow-md transition"
+                className="cursor-pointer rounded-lg p-2 hover:shadow-md transition flex flex-col items-center text-center"
               >
-                <h2 className="text-base text-[#661218] font-medium mb-3">{outfit.name}</h2>
+                <h2 className="text-base text-[#661218] font-medium mb-4">
+                  {outfit.name}
+                </h2>
 
-                <div className="flex flex-wrap items-end pt-4 pb-2">
+                <div className="flex  items-end justify-center pt-4 pb-2">
                   {outfit.closetItems.map((item, i) => {
                     const seed = scatterSeed(item.id) + i * 7;
                     const rotate = (seed % 21) - 10;

@@ -103,7 +103,7 @@ export default function SignupPage() {
                 value={form.name}
                 onChange={handleChange}
                 placeholder="Jane Doe"
-                className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+                className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-[#E8A33D] placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
               />
             </div>
 
@@ -122,7 +122,7 @@ export default function SignupPage() {
                 value={form.username}
                 onChange={handleChange}
                 placeholder="jane_doe"
-                className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+                className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-[#E8A33D] placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
               />
             </div>
 
@@ -141,7 +141,7 @@ export default function SignupPage() {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="jane@example.com"
-                className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+                className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-white placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
               />
             </div>
 
@@ -160,7 +160,7 @@ export default function SignupPage() {
                 value={form.password}
                 onChange={handleChange}
                 placeholder="At least 8 characters"
-                className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+                className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-white placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
               />
             </div>
 
@@ -171,7 +171,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-white py-3 font-semibold text-[#0B1220] transition hover:bg-[#F2B458] disabled:opacity-60"
+              className="w-full rounded-lg bg-white py-3 font-semibold text-[#0B1220] transition hover:bg-[#550f14] hover:text-white disabled:opacity-60"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>

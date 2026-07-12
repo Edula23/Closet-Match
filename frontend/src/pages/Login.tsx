@@ -98,7 +98,7 @@ export default function LoginPage() {
               value={form.email}
               onChange={handleChange}
               placeholder="john@example.com"
-              className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+              className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-[#E8A33D] placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
             />
           </div>
 
@@ -117,7 +117,7 @@ export default function LoginPage() {
               value={form.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full rounded-lg border border-white bg-[#661218] px-4 py-3 text-white placeholder:text-white outline-none focus:border-[#E8A33D]"
+              className="w-full rounded-lg border border-[#8C9BB5] px-4 py-3 text-white placeholder:text-[#8C9BB5] outline-none focus:border-[#E8A33D]"
             />
           </div>
 
@@ -128,7 +128,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-white py-3 font-semibold text-[#0B1220] transition hover:bg-[#F2B458] disabled:opacity-60"
+            className="w-full rounded-lg bg-white py-3 font-semibold text-[#0B1220] transition hover:bg-[#550f14] hover:text-white disabled:opacity-60"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
