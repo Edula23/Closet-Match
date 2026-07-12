@@ -28,7 +28,7 @@ export default function HeroSection() {
         <div className="hidden md:flex items-center gap-2">
           <Link to="/login">
             <button className=" border-[#661218] border-2 hover:bg-[#550f14] hover:text-white transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full">
-              Sign In
+              Log in
             </button>
           </Link>
           <Link to="/signup">
@@ -57,16 +57,16 @@ export default function HeroSection() {
           </Link>
           <Link to="/login" className="ml-auto">
             <button className="mt-2 border-2 border-[#661218] ml-auto hover:bg-blue-400 transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full w-fit">
-              Sign In
+              Log In
             </button>
           </Link>
         </div>
       )}
 
       {/* Hero Content */}
-      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-16 pt-8 md:pt-12 pb-16 gap-10 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-4 pt-8 md:pt-36 pb-16 gap-16 max-w-7xl mx-auto">
         {/* Left Side */}
-        <div className="flex flex-col gap-6 md:max-w-[45%] z-10">
+        <div className="flex flex-col gap-6 md:max-w-[34%] z-10">
           {/* Avatars + tag */}
           <div className="flex items-center gap-3">
             {/* <div className="flex -space-x-2">
@@ -83,10 +83,10 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-            <span className="text-[#661218]">
-              Dress Smarter with Your Own Closet
-            </span>
+          <h1 className="text-3xl sm:text-5xl md:text-4xl font-bold leading-tight text-[#661218]">
+            <span className="text-[#661218] text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+              Dress Smarter 
+            </span> with Your Own Closet
             {/* <span className="text-purple-400">Match</span> */}
           </h1>
 
@@ -110,7 +110,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Side */}
-        <div className="flex flex-col gap-4 md:max-w-[20%] text-sm text-[#200705] ">
+        <div className="flex flex-col gap-4 md:max-w-[30%] text-sm text-[#200705] ">
           <p className="leading-relaxed">
             Upload your wardrobe, let AI find matching combinations, and build outfits tailored to your style all in seconds.
           </p>
