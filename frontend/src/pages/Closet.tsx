@@ -242,15 +242,23 @@ const logout = async () => {
 
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
+          
+          <Link to="/dashboard" className=" ml-auto">
+            <button className="bg-[#661218] text-white  ml:auto hover:bg-[#550f14] transition-colors text-sm font-medium px-5 py-2 rounded-full">
+              My Outfits
+            </button>
+          </Link>
+           <Link className="ml-auto">
           <button
             onClick={() => {
-              setShowUploadModal(true);
+              logout();
               setMenuOpen(false);
             }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
+            className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
-            + Add Closet
+            Logout
           </button>
+          </Link>
         </div>
       )}
 
@@ -420,7 +428,7 @@ const logout = async () => {
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
           <h2 className="text-2xl font-semibold mb-6 text-[#661218]">My Closet</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {closets.map((item) => (
               <div key={item.id} className="relative aspect-square group">
                 <button
@@ -466,18 +474,18 @@ const logout = async () => {
                 {/* Mobile: long-press delete/match overlay */}
                 {longPressId === item.id && (
                   <div
-                    className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-2 rounded-lg sm:hidden"
+                    className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-6 rounded-lg sm:hidden"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
                       onClick={() => matchOutfit(item.id)}
-                      className="bg-blue-500 text-white text-xs px-3 py-1.5 rounded-md w-24"
+                      className="bg-[#661218] text-white text-xs px-4 py-2 rounded-md w-30"
                     >
                       ✨ Match
                     </button>
                     <button
                       onClick={() => deleteClothing(item.id)}
-                      className="bg-red-500 text-white text-xs px-3 py-1.5 rounded-md w-24"
+                      className="bg-red-500 text-white text-xs px-4 py-2 rounded-md w-30"
                     >
                       Delete
                     </button>

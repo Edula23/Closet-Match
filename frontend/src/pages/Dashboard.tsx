@@ -258,24 +258,24 @@ export default function Dashboard() {
 
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
-          <button
-            onClick={() => {
-              setShowUploadModal(true);
-              setMenuOpen(false);
-            }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2  border-white/20"
-          >
-            + Add Closet
-          </button>
+          <Link className=" ml-auto" to="/closet">
+            <button
+              className="bg-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full"
+            >
+              My Closet
+            </button>
+          </Link>
+          <Link className=" ml-auto">
           <button
             onClick={() => {
               logout();
               setMenuOpen(false);
             }}
-            className="text-center px-4 py-2 ml-auto border-2 text-[#661218] border-[#661218] rounded-full hover:bg-[#550f14] transition-colors w-1/2"
+            className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
             Logout
           </button>
+          </Link>
         </div>
       )}
 
