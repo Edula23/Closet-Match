@@ -457,7 +457,7 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={addMatchToSelection}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Add to Outfit
               </button>
@@ -476,7 +476,7 @@ export default function Dashboard() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-bold">{selectedOutfit.name}</h2>
+              <h2 className="text-lg text-[#550f14] font-bold">{selectedOutfit.name}</h2>
               <div className="flex gap-3 items-center">
                 <button
                   onClick={() => setIsEditing((prev) => !prev)}
@@ -494,7 +494,7 @@ export default function Dashboard() {
             </div>
 
             {selectedOutfit.description && (
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="text-sm text-gray-800 mb-4">
                 {selectedOutfit.description}
               </p>
             )}
@@ -524,7 +524,7 @@ export default function Dashboard() {
                         key={item.id}
                         onClick={() => toggleClosetItem(item.id)}
                         className={`relative border rounded-md overflow-hidden cursor-pointer ${
-                          included ? "ring-2 ring-blue-500" : "opacity-50"
+                          included ? "ring-2 ring-[#661218]" : "opacity-50"
                         }`}
                       >
                         <img
@@ -533,7 +533,7 @@ export default function Dashboard() {
                           className="w-full h-32 object-cover"
                         />
                         {included && (
-                          <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                          <span className="absolute top-1 right-1 bg-[#661218] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             ✓
                           </span>
                         )}
@@ -545,7 +545,7 @@ export default function Dashboard() {
                 <button
                   onClick={saveOutfit}
                   disabled={saving}
-                  className="w-full bg-blue-500 text-white py-2 rounded-md disabled:opacity-50"
+                  className="w-full bg-[#661218] text-white py-2 rounded-md disabled:opacity-50"
                 >
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
