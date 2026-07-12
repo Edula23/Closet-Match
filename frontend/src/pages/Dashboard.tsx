@@ -397,7 +397,7 @@ export default function Dashboard() {
 
       {matchLoading && (
         <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-[60]">
-          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
+          <div className="bg-[#550f14] text-white px-6 py-4 rounded-xl shadow-xl text-sm">
             Finding the best match... ✨
           </div>
         </div>

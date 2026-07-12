@@ -9,7 +9,7 @@ export default function HeroSection() {
   return (
     <section className="min-h-screen bg-[#d0cac3]  text-white font-sans overflow-hidden">
       {/* Navbar */}
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5">
+      <nav className="flex items-center justify-between px-6 md:px-12 py-5 shadow-sm">
         <div className="text-xl font-bold tracking-tight">
           <span className="text-[#661218]">Closet</span>
           <span className="text-[#661218]">Match</span>

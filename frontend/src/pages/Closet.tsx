@@ -370,7 +370,7 @@ const logout = async () => {
       )}
       {matchLoading && (
         <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50">
-          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl border-2 border-[#661218] text-sm">
+          <div className="bg-[#550f14] text-white px-6 py-4 rounded-xl shadow-xl border-2 border-[#661218] text-sm">
             Finding the best match... ✨
           </div>
         </div>
