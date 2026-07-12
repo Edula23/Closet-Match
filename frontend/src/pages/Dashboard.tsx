@@ -286,7 +286,7 @@ export default function Dashboard() {
       </button>
 
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-sm shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Upload closet item</h2>
             <input
@@ -306,7 +306,7 @@ export default function Dashboard() {
               </button>
               <button
                 onClick={uploadClothing}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Upload
               </button>
