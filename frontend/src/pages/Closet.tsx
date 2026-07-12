@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router";
 export default function Closet() {
   interface Closet {
     id: number;
@@ -220,12 +221,13 @@ const logout = async () => {
           >
             Logout
           </button>
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-          >
-            + Add Closet
-          </button>
+          <Link to="/dashboard">
+            <button
+              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            >
+              My Outfits
+            </button>
+          </Link>
         </ul>
 
         {/* Mobile Hamburger */}
@@ -254,14 +256,14 @@ const logout = async () => {
 
       {/* Floating Add Outfit button — fixed to viewport, stays on scroll */}
       <button
-        onClick={() => setShowOutfitModal(true)}
+        onClick={() => setShowUploadModal(true)}
         className="fixed bottom-6 right-6 z-40 px-5 py-3 rounded-full bg-[#661218] hover:bg-[#550f14] transition-colors shadow-lg text-sm font-medium flex items-center gap-2"
       >
-        + Add Outfit
+        + Add Closet
       </button>
 
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-sm shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Upload closet item</h2>
             <input
@@ -281,7 +283,7 @@ const logout = async () => {
               </button>
               <button
                 onClick={uploadClothing}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Upload
               </button>
@@ -417,7 +419,7 @@ const logout = async () => {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">Closet</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">My Closet</h2>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {closets.map((item) => (
               <div key={item.id} className="relative aspect-square group">

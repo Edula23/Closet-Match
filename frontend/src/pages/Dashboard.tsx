@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 export default function Dashboard() {
   interface Closet {
     id: number;
@@ -236,12 +237,13 @@ export default function Dashboard() {
           >
             Logout
           </button>
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-          >
-            + Add Closet
-          </button>
+          <Link to="/closet">
+            <button
+              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
+            >
+              My Closet
+            </button>
+          </Link>
         </ul>
 
         {/* Mobile Hamburger */}
@@ -348,7 +350,7 @@ export default function Dashboard() {
                     onClick={() => toggleCloset(item.id)}
                     className={`w-full h-full rounded-lg overflow-hidden border-2 ${
                       selectedClosetIds.includes(item.id)
-                        ? "border-blue-500"
+                        ? "border-[#661218]"
                         : "border-transparent"
                     }`}
                   >
@@ -562,8 +564,8 @@ export default function Dashboard() {
           </h1>
 
           {outfits.length === 0 && (
-            <p className="text-sm text-white/60">
-              No outfits yet — create one from your closet items.
+            <p className="text-sm text-[#551214] mb-6">
+              No outfits yet create one from your closet items.
             </p>
           )}
 
