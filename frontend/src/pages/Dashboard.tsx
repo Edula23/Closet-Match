@@ -133,7 +133,9 @@ export default function Dashboard() {
 
   const toggleClosetItem = (id: number) => {
     setEditClosetIds((prev) =>
-      prev.includes(id) ? prev.filter((closetId) => closetId !== id) : [...prev, id],
+      prev.includes(id)
+        ? prev.filter((closetId) => closetId !== id)
+        : [...prev, id],
     );
   };
   const saveOutfit = async () => {
@@ -155,7 +157,8 @@ export default function Dashboard() {
     }
     setOutfits((prev) =>
       prev.map((outfit) =>
-        outfit.id === selectedOutfit.id ? data.outfit : outfit),
+        outfit.id === selectedOutfit.id ? data.outfit : outfit,
+      ),
     );
     setSelectedOutfit(data.outfit);
     setIsEditing(false);
@@ -228,16 +231,16 @@ export default function Dashboard() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
+            onClick={logout}
+            className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
+          >
+            Logout
+          </button>
+          <button
             onClick={() => setShowUploadModal(true)}
             className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
           >
             + Add Closet
-          </button>
-          <button
-            onClick={logout}
-            className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-          >
-            Logout
           </button>
         </ul>
 
@@ -267,7 +270,7 @@ export default function Dashboard() {
               logout();
               setMenuOpen(false);
             }}
-            className="text-center px-4 py-2 ml-auto bg-[#661218] rounded-full border w-1/2 border-white/20"
+            className="text-center px-4 py-2 ml-auto border-2 text-[#661218] border-[#661218] rounded-full hover:bg-[#550f14] transition-colors w-1/2"
           >
             Logout
           </button>
@@ -403,7 +406,9 @@ export default function Dashboard() {
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
 
-            <p className="text-xs font-medium text-gray-500 mb-2">Selected item</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">
+              Selected item
+            </p>
             <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
               <img
                 src={matchTargetItem.image}
@@ -412,19 +417,32 @@ export default function Dashboard() {
               />
             </div>
 
-            <p className="text-center text-xs text-gray-400 mb-3">pairs well with</p>
+            <p className="text-center text-xs text-gray-400 mb-3">
+              pairs well with
+            </p>
 
             <div className="grid grid-cols-3 gap-2 mb-4">
               {closets
-                .filter((item) => matchResult.suggested_item_ids.includes(String(item.id)))
+                .filter((item) =>
+                  matchResult.suggested_item_ids.includes(String(item.id)),
+                )
                 .map((item) => (
-                  <div key={item.id} className="aspect-square rounded-lg overflow-hidden">
-                    <img src={item.image} alt={item.fileName} className="w-full h-full object-cover" />
+                  <div
+                    key={item.id}
+                    className="aspect-square rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                 ))}
             </div>
 
-            <p className="text-sm text-gray-600 mb-5">{matchResult.reasoning}</p>
+            <p className="text-sm text-gray-600 mb-5">
+              {matchResult.reasoning}
+            </p>
 
             <div className="flex justify-end gap-2">
               <button
@@ -466,21 +484,33 @@ export default function Dashboard() {
                 >
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
-                <button onClick={() => setSelectedOutfit(null)} className="text-xl">
+                <button
+                  onClick={() => setSelectedOutfit(null)}
+                  className="text-xl"
+                >
                   ✕
                 </button>
               </div>
             </div>
 
             {selectedOutfit.description && (
-              <p className="text-sm text-gray-500 mb-4">{selectedOutfit.description}</p>
+              <p className="text-sm text-gray-500 mb-4">
+                {selectedOutfit.description}
+              </p>
             )}
 
             {!isEditing ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {selectedOutfit.closetItems.map((item) => (
-                  <div key={item.id} className="border rounded-md overflow-hidden">
-                    <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                  <div
+                    key={item.id}
+                    className="border rounded-md overflow-hidden"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-32 object-cover"
+                    />
                   </div>
                 ))}
               </div>
@@ -497,7 +527,11 @@ export default function Dashboard() {
                           included ? "ring-2 ring-blue-500" : "opacity-50"
                         }`}
                       >
-                        <img src={item.image} alt={item.fileName} className="w-full h-32 object-cover" />
+                        <img
+                          src={item.image}
+                          alt={item.fileName}
+                          className="w-full h-32 object-cover"
+                        />
                         {included && (
                           <span className="absolute top-1 right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                             ✓
@@ -523,7 +557,9 @@ export default function Dashboard() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section className="mb-12">
-          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">My outfits</h1>
+          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
+            My outfits
+          </h1>
 
           {outfits.length === 0 && (
             <p className="text-sm text-white/60">
@@ -531,16 +567,18 @@ export default function Dashboard() {
             </p>
           )}
 
-          <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {outfits.map((outfit) => (
               <div
                 key={outfit.id}
                 onClick={() => setSelectedOutfit(outfit)}
-                className="cursor-pointer rounded-lg p-3 hover:shadow-md transition"
+                className="cursor-pointer rounded-lg p-2 hover:shadow-md transition flex flex-col items-center text-center"
               >
-                <h2 className="text-base text-[#661218] font-medium mb-3">{outfit.name}</h2>
+                <h2 className="text-base text-[#661218] font-medium mb-4">
+                  {outfit.name}
+                </h2>
 
-                <div className="flex flex-wrap items-end pt-4 pb-2">
+                <div className="flex  items-end justify-center pt-4 pb-2">
                   {outfit.closetItems.map((item, i) => {
                     const seed = scatterSeed(item.id) + i * 7;
                     const rotate = (seed % 21) - 10;
