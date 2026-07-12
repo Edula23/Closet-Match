@@ -31,7 +31,7 @@ export async function getOutfitSuggestion(targetItem, closetItems) {
   }
 
   parts.push({
-    text: `Based on color, style, and occasion, suggest the best 2-4 items from the closet to pair with the target item to form a complete outfit. Respond ONLY with valid JSON in this exact format, no other text:
+    text: `Based on color, style, and occasion, suggest the best 2-4 items from the closet to pair with the target item to form a complete outfit. Respond ONLY with valid JSON in this exact format, no other text. When writing the "reasoning" field, describe items by their visible traits (color, type, style) — never mention numeric IDs, database keys, or item indexes. IDs should only appear in the "suggested_item_ids" array.
 {
   "suggested_item_ids": ["id1", "id2"],
   "reasoning": "short explanation of why these work together"

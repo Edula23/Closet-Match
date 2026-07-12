@@ -188,6 +188,21 @@ export default function Closet() {
   setShowMatchModal(false);
   setShowOutfitModal(true); // reuse your existing outfit modal
 };
+const logout = async () => {
+    try {
+      const res = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (res.ok) {
+        window.location.href = "/login";
+      } else {
+        console.log("Logout failed");
+      }
+    } catch (err) {
+      console.log("Logout error:", err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
@@ -199,6 +214,12 @@ export default function Closet() {
 
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
+          <button
+            onClick={logout}
+            className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
+          >
+            Logout
+          </button>
           <button
             onClick={() => setShowUploadModal(true)}
             className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
@@ -338,20 +359,19 @@ export default function Closet() {
         </div>
       )}
       {matchLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50">
+          <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl border-2 border-[#661218] text-sm">
             Finding the best match... ✨
           </div>
         </div>
       )}
 
       {showMatchModal && matchResult && matchTargetItem && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+  <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
     <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-      <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
+      <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
 
-      <p className="text-xs font-medium text-gray-500 mb-2">Selected item</p>
-      <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
+      <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
         <img
           src={matchTargetItem.image}
           alt={matchTargetItem.fileName}
@@ -386,7 +406,7 @@ export default function Closet() {
         </button>
         <button
           onClick={saveMatchAsOutfit}
-          className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+          className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
         >
           Save as Outfit
         </button>
@@ -434,7 +454,7 @@ export default function Closet() {
                     e.stopPropagation();
                     matchOutfit(item.id);
                   }}
-                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-blue-500 text-white w-6 h-6 rounded-full items-center justify-center text-xs"
+                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-[#661218] text-white w-6 h-6 rounded-full items-center justify-center text-xs"
                   aria-label="Match with closet"
                 >
                   ✨

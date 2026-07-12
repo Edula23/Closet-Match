@@ -316,14 +316,14 @@ export default function Dashboard() {
       )}
 
       {showOutfitModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-lg max-h-[80vh] overflow-y-auto shadow-xl">
             <h2 className="text-lg font-semibold mb-4">Create outfit</h2>
 
             <input
               type="text"
               placeholder="Outfit name"
-              className="border border-gray-300 rounded-lg p-2.5 w-full mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 rounded-lg p-2.5 w-full mb-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#661218]"
               value={outfitName}
               onChange={(e) => setOutfitName(e.target.value)}
             />
@@ -331,7 +331,7 @@ export default function Dashboard() {
             <input
               type="text"
               placeholder="Description"
-              className="border border-gray-300 rounded-lg p-2.5 w-full mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="border border-gray-300 rounded-lg p-2.5 w-full mb-5 text-sm focus:outline-none focus:ring-2 focus:ring-[#661218]"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -365,7 +365,7 @@ export default function Dashboard() {
                       e.stopPropagation();
                       matchOutfit(item.id);
                     }}
-                    className="absolute top-1 left-1 bg-blue-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
+                    className="absolute top-1 left-1 bg-[#661218] text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                     aria-label="Match with closet"
                   >
                     ✨
@@ -384,7 +384,7 @@ export default function Dashboard() {
 
               <button
                 onClick={createOutfit}
-                className="px-4 py-2 text-sm rounded-full bg-blue-500 text-white hover:bg-blue-600"
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
               >
                 Create
               </button>
@@ -394,7 +394,7 @@ export default function Dashboard() {
       )}
 
       {matchLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-[60]">
           <div className="bg-white text-gray-900 px-6 py-4 rounded-xl shadow-xl text-sm">
             Finding the best match... ✨
           </div>
@@ -402,14 +402,14 @@ export default function Dashboard() {
       )}
 
       {showMatchModal && matchResult && matchTargetItem && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60] px-4">
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-60 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-            <h2 className="text-lg font-semibold mb-4">Suggested match</h2>
+            <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
 
             <p className="text-xs font-medium text-gray-500 mb-2">
               Selected item
             </p>
-            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-blue-500 mx-auto">
+            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
               <img
                 src={matchTargetItem.image}
                 alt={matchTargetItem.fileName}
