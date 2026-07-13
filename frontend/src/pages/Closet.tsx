@@ -207,7 +207,7 @@ const logout = async () => {
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10">
+      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b shadow-sm border-white/10">
         <div className="text-xl font-bold tracking-tight">
           <span className="text-[#661218]">Closet</span>
           <span className="text-[#661218]">Match</span>
@@ -241,7 +241,7 @@ const logout = async () => {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
+        <div className="md:hidden flex flex-col justify-end items-end px-6 gap-3 pt-2 pb-5 text-sm">
           
           <Link to="/dashboard" className=" ml-auto">
             <button className="bg-[#661218] text-white  ml:auto hover:bg-[#550f14] transition-colors text-sm font-medium px-5 py-2 rounded-full">
