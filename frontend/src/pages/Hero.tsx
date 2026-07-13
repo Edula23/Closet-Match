@@ -64,9 +64,9 @@ export default function HeroSection() {
       )}
 
       {/* Hero Content */}
-      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-4 pt-8 md:pt-50 pb-16 gap-16 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-2  pt-8 md:pt-50 pb-16 gap-16 max-w-7xl mx-auto">
         {/* Left Side */}
-        <div className="flex flex-col gap-6 md:max-w-[34%] z-10">
+        <div className="flex flex-col gap-6 md:px-1 md:max-w-[34%] z-10">
           {/* Avatars + tag */}
           <div className="flex items-center gap-3">
             {/* <div className="flex -space-x-2">
@@ -111,7 +111,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right Side */}
-        <div className="flex flex-col gap-4 md:max-w-[30%] text-sm text-[#200705] ">
+        <div className="flex flex-col gap-4 md:px-3 md:max-w-[30%] text-sm text-[#200705] ">
           <p className="leading-relaxed">
             Upload your wardrobe, let AI find matching combinations, and build
             outfits tailored to your style all in seconds.
