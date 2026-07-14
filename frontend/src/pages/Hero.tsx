@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import heroimage2 from "../assets/heroImg.jpg";
+import heroimage2 from "../assets/heroImg2.jpg";
 // const navLinks = ["Home", "About", "Courses", "Contact"];
 
 export default function HeroSection() {
@@ -64,9 +64,9 @@ export default function HeroSection() {
       )}
 
       {/* Hero Content */}
-      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-4 pt-8 md:pt-36 pb-16 gap-16 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-2  pt-8 md:pt-50 pb-16 gap-16 max-w-7xl mx-auto">
         {/* Left Side */}
-        <div className="flex flex-col gap-6 md:max-w-[34%] z-10">
+        <div className="flex flex-col gap-6 md:px-1 md:max-w-[34%] z-10">
           {/* Avatars + tag */}
           <div className="flex items-center gap-3">
             {/* <div className="flex -space-x-2">
@@ -79,45 +79,45 @@ export default function HeroSection() {
                 </div>
               ))}
             </div> */}
-            <span className="text-xs text-[#200705] font-medium">#Fashion</span>
+            <span className="text-xs text-[#200705] font-medium hidden md:block">#Fashion</span>
           </div>
 
           {/* Headline */}
           <h1 className="text-3xl sm:text-5xl md:text-4xl font-bold leading-tight text-[#661218]">
             <span className="text-[#661218] text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
-              Dress Smarter 
-            </span> with Your Own Closet
+              Dress Smarter
+            </span>{" "}
+            with Your Own Closet
             {/* <span className="text-purple-400">Match</span> */}
           </h1>
 
           {/* Description */}
           <p className="text-sm sm:text-base text-[#200705] leading-relaxed max-w-sm">
-            ClosetMatch uses AI to help you discover outfit combinations from
+            ClosetMatch uses helps you discover outfit combinations from
             the clothes you already own. Organize your wardrobe, create stylish
             looks, and never wonder what to wear again.
           </p>
         </div>
 
         {/* Center Image */}
-        <div className="relative w-full md:w-auto flex justify-center bg-transparent">
+        <div className="relative md:w-auto flex justify-center bg-transparent">
           {/* Glow effect */}
-          <div className="absolute inset-0 rounded-full scale-75 md:scale-100 bg-transparent" />
+          <div className="relative flex justify-center" />
           <img
             src={heroimage2}
             alt="Fashion model"
-            className="relative z-10 w-56 sm:w-72 md:w-80 object-cover"
+            className="relative z-10 w-72 sm:w-96 md:w-[28rem] lg:w-[34rem] md:scale-138 xl:w-[38rem] object-cover"
           />
         </div>
 
         {/* Right Side */}
-        <div className="flex flex-col gap-4 md:max-w-[30%] text-sm text-[#200705] ">
+        <div className="flex flex-col gap-4 md:px-3 md:max-w-[30%] text-sm text-[#200705] ">
           <p className="leading-relaxed">
-            Upload your wardrobe, let AI find matching combinations, and build outfits tailored to your style all in seconds.
+            Upload your wardrobe, let AI find matching combinations, and build
+            outfits tailored to your style all in seconds.
           </p>
         </div>
       </div>
-
-      
     </section>
   );
 }

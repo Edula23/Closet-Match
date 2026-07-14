@@ -223,7 +223,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
-      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10">
+      <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10 shadow-sm">
         <div className="text-xl font-bold tracking-tight">
           <span className="text-[#661218]">Closet</span>
           <span className="text-[#661218]">Match</span>
@@ -257,7 +257,7 @@ export default function Dashboard() {
       </nav>
 
       {menuOpen && (
-        <div className="md:hidden flex flex-col justify-end px-6 gap-3 pb-5 text-sm">
+        <div className="md:hidden flex flex-col justify-end items-end px-6 gap-3 pb-5 pt-2 text-sm">
           <Link className=" ml-auto" to="/closet">
             <button
               className="bg-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full"
