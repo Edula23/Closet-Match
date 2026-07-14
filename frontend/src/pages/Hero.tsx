@@ -2,9 +2,42 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import heroimage2 from "../assets/heroImg2.jpg";
 // const navLinks = ["Home", "About", "Courses", "Contact"];
+import { useNavigate } from "react-router-dom";
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleGoogleSuccess = async (res: CredentialResponse) => {
+    if (!res.credential) {
+      console.error("No credential returned from Google");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ credential: res.credential }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        console.error(
+          "Google login failed:",
+          data?.message || response.statusText,
+        );
+        return;
+      }
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+
+  }
 
   return (
     <section className="min-h-screen bg-[#d0cac3]  text-white font-sans overflow-hidden">
@@ -15,38 +48,18 @@ export default function HeroSection() {
           <span className="text-[#661218]">Match</span>
         </div>
 
-        {/* Desktop Nav */}
-        {/* <ul className="hidden md:flex gap-8 text-sm text-gray-300">
-          {navLinks.map((link) => (
-            <li key={link}>
-              <a href="#" className="hover:text-white transition-colors">
-                {link}
-              </a>
-            </li>
-          ))}
-        </ul> */}
-        <div className="hidden md:flex items-center gap-2">
-          <Link to="/login">
-            <button className=" border-[#661218] border-2 hover:bg-[#550f14] hover:text-white transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full">
-              Log in
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className="bg-[#661218] hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full">
-              Sign Up
-            </button>
-          </Link>
-        </div>
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden text-[#661218] text-2xl"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? "✕" : "☰"}
-        </button>
-      </nav>
+        <div className="flex justify-center mt-6">
+        <GoogleLogin
+          onSuccess={handleGoogleSuccess}
+          onError={() => console.error("Google login failed")}
+          theme="filled_black"
+          shape="pill"
+          text="continue_with"
 
+        />
+      </div>
+      </nav>
+      
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden px-6 py-4 flex flex-col justify-end gap-4 text-sm text-gray-200">
@@ -79,7 +92,9 @@ export default function HeroSection() {
                 </div>
               ))}
             </div> */}
-            <span className="text-xs text-[#200705] font-medium hidden md:block">#Fashion</span>
+            <span className="text-xs text-[#200705] font-medium hidden md:block">
+              #Fashion
+            </span>
           </div>
 
           {/* Headline */}
@@ -93,8 +108,8 @@ export default function HeroSection() {
 
           {/* Description */}
           <p className="text-sm sm:text-base text-[#200705] leading-relaxed max-w-sm">
-            ClosetMatch uses helps you discover outfit combinations from
-            the clothes you already own. Organize your wardrobe, create stylish
+            ClosetMatch uses helps you discover outfit combinations from the
+            clothes you already own. Organize your wardrobe, create stylish
             looks, and never wonder what to wear again.
           </p>
         </div>

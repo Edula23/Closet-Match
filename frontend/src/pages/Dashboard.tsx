@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function Dashboard() {
   interface Closet {
     id: number;
@@ -43,6 +44,23 @@ export default function Dashboard() {
   useEffect(() => {
     fetchCloset();
   }, []);
+
+
+// ... inside your component
+const navigate = useNavigate();
+
+const handleSignOut = async () => {
+  try {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+  } finally {
+    navigate("/"); // back to hero/homepage
+  }
+}
 
   const fetchOutfits = async () => {
     const res = await fetch("/api/outfits", {
@@ -232,10 +250,10 @@ export default function Dashboard() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
-            onClick={logout}
+            onClick={handleSignOut}
             className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
           >
-            Logout
+            Sign out
           </button>
           <Link to="/closet">
             <button
@@ -267,12 +285,12 @@ export default function Dashboard() {
           </Link>
           <button
             onClick={() => {
-              logout();
+              handleSignOut();
               setMenuOpen(false);
             }}
             className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
-            Logout
+            Sign out
           </button>
         </div>
       )}

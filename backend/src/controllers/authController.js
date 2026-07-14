@@ -1,8 +1,11 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { OAuth2Client } from "google-auth-library";
 
 import prisma from "../prismaClient.js";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 function normalizeEmail(email = "") {
   return email.trim().toLowerCase();
@@ -30,10 +33,10 @@ function signToken(user) {
 
 export async function register(req, res) {
   try {
-    const { name, email, password, username } = req.body;
+    const { name, email, password } = req.body;
     const normalizedEmail = normalizeEmail(email);
 
-    if (!name?.trim() || !normalizedEmail || !password || !username) {
+    if (!name?.trim() || !normalizedEmail || !password) {
       return res
         .status(400)
         .json({ message: "Name, email, and password are required." });
@@ -56,7 +59,6 @@ export async function register(req, res) {
         name,
         email: normalizedEmail,
         password: hashedPassword,
-        username: username.trim()
       },
     });
 
@@ -74,8 +76,8 @@ export async function register(req, res) {
 
 export async function login(req, res) {
   try {
-    const { email, password, username } = req.body || {};
-    const normalizedEmail = normalizeEmail(email || username);
+    const { email, password } = req.body || {};
+    const normalizedEmail = normalizeEmail(email);
 
     if (!normalizedEmail || !password) {
       return res
@@ -87,7 +89,7 @@ export async function login(req, res) {
       where: { email: normalizedEmail },
     });
 
-    if (!user) {
+    if (!user || !user.password) {
       return res.status(400).json({ message: "Invalid email or password." });
     }
 
@@ -102,6 +104,54 @@ export async function login(req, res) {
   } catch (error) {
     console.error("Login error:", error.message);
     return res.status(500).json({ message: "Server error during login." });
+  }
+}
+
+export async function googleLogin(req, res) {
+  try {
+    const { credential } = req.body || {};
+
+    if (!credential) {
+      return res.status(400).json({ message: "Missing Google credential." });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+
+    if (!payload?.email) {
+      return res.status(400).json({ message: "Invalid Google token." });
+    }
+
+    const normalizedEmail = normalizeEmail(payload.email);
+    let user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          name: payload.name || normalizedEmail.split("@")[0],
+          email: normalizedEmail,
+          password: null,
+          googleId: payload.sub,
+        },
+      });
+    } else if (!user.googleId) {
+      // Existing password-based account signing in with Google for the first time — link it
+      user = await prisma.user.update({
+        where: { id: user.id },
+        data: { googleId: payload.sub },
+      });
+    }
+
+    const safeUser = { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion };
+    const token = signToken(safeUser);
+    res.cookie("token", token, getAuthCookieOptions());
+    return res.json({ message: "Login Successful", token, user: safeUser });
+  } catch (error) {
+    console.error("Google login error:", error.message);
+    return res.status(500).json({ message: "Server error during Google login." });
   }
 }
 

@@ -13,10 +13,10 @@ datasource db {
 
 model User {
   id        Int     @id @default(autoincrement())
-  name      String
-  username  String  @unique
-  password  String
+  name      String?
+  password  String?
   email     String  @unique
+  googleId  String?  @unique
   tokenVersion Int  @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
