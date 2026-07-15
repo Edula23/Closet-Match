@@ -3,24 +3,19 @@ import { Link } from "react-router-dom";
 import heroimage2 from "../assets/heroImg2.jpg";
 // const navLinks = ["Home", "About", "Courses", "Contact"];
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
-
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from "@react-oauth/google";
 export default function HeroSection() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleGoogleSuccess = async (res: CredentialResponse) => {
-    if (!res.credential) {
-      console.error("No credential returned from Google");
-      return;
-    }
-
+  const handleGoogleAuthCode = async (codeResponse: { code: string }) => {
     try {
       const response = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ credential: res.credential }),
+        body: JSON.stringify({ code: codeResponse.code }),
       });
 
       if (!response.ok) {
@@ -36,8 +31,13 @@ export default function HeroSection() {
     } catch (error) {
       console.error("Google login error:", error);
     }
+  };
 
-  }
+  const googleLogin = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: handleGoogleAuthCode,
+    onError: () => console.error("Google login failed"),
+  });
 
   return (
     <section className="min-h-screen bg-[#d0cac3]  text-white font-sans overflow-hidden">
@@ -48,18 +48,16 @@ export default function HeroSection() {
           <span className="text-[#661218]">Match</span>
         </div>
 
-        <div className="flex justify-center mt-6">
-        <GoogleLogin
-          onSuccess={handleGoogleSuccess}
-          onError={() => console.error("Google login failed")}
-          theme="filled_black"
-          shape="pill"
-          text="continue_with"
-
-        />
-      </div>
+        
+          <button
+            onClick={() => googleLogin()}
+            className="flex items-center gap-2 border-2 border-[#661218] text-[#661218] hover:text-white px-3 py-2 rounded-full font-medium hover:bg-[#7a1620] transition-colors"
+          >
+            <FcGoogle />
+           Sign in
+          </button>
       </nav>
-      
+
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden px-6 py-4 flex flex-col justify-end gap-4 text-sm text-gray-200">

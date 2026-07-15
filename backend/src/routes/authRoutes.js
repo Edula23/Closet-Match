@@ -1,8 +1,5 @@
 import express from "express";
 import { authMiddleware } from "../middleware/authMiddleware.js";
-import {
-  login, register, me, logout
-} from "../controllers/authController.js";
 import { googleLogin } from "../controllers/authController.js";
 
 

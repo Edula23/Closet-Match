@@ -1,199 +1,64 @@
-import express from "express";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library";
+import jwt from "jsonwebtoken";
+import prisma from "../prismaClient.js"; 
 
-import prisma from "../prismaClient.js";
-
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
-function normalizeEmail(email = "") {
-  return email.trim().toLowerCase();
-}
-
-function getAuthCookieOptions() {
-  const isProduction = process.env.NODE_ENV === "production";
-
-  return {
-    httpOnly: true,
-    sameSite: isProduction ? "none" : "lax",
-    secure: isProduction,
-    path: "/",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  };
-}
-
-function signToken(user) {
-  return jwt.sign(
-    { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-}
-
-export async function register(req, res) {
-  try {
-    const { name, email, password } = req.body;
-    const normalizedEmail = normalizeEmail(email);
-
-    if (!name?.trim() || !normalizedEmail || !password) {
-      return res
-        .status(400)
-        .json({ message: "Name, email, and password are required." });
-    }
-
-    if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters." });
-    }
-    const existingUser = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
-    });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use." });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email: normalizedEmail,
-        password: hashedPassword,
-      },
-    });
-
-    const safeUser = { id: newUser.id, email: newUser.email, name: newUser.name, tokenVersion: newUser.tokenVersion };
-    const token = signToken(safeUser);
-    res.cookie("token", token, getAuthCookieOptions());
-    return res.status(201).json({ token, user: safeUser });
-  }
-  catch (error) {
-    console.error("Register error:", error.message);
-    return res.status(500).json({ message: "Server error during registration." });
-  }
-
-}
-
-export async function login(req, res) {
-  try {
-    const { email, password } = req.body || {};
-    const normalizedEmail = normalizeEmail(email);
-
-    if (!normalizedEmail || !password) {
-      return res
-        .status(400)
-        .json({ message: "Email and password are required." });
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { email: normalizedEmail },
-    });
-
-    if (!user || !user.password) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid email or password." });
-    }
-    const safeUser = { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion };
-    const token = signToken(safeUser);
-    res.cookie("token", token, getAuthCookieOptions());
-    return res.json({ message: "Login Successful", token, user: safeUser });
-  } catch (error) {
-    console.error("Login error:", error.message);
-    return res.status(500).json({ message: "Server error during login." });
-  }
-}
+const client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "postmessage"
+);
 
 export async function googleLogin(req, res) {
+  const { code } = req.body;
+  if (!code) return res.status(400).json({ message: "Missing code" });
+
   try {
-    const { credential } = req.body || {};
+    const { tokens } = await client.getToken(code);
 
-    if (!credential) {
-      return res.status(400).json({ message: "Missing Google credential." });
-    }
-
-    const ticket = await googleClient.verifyIdToken({
-      idToken: credential,
+    const ticket = await client.verifyIdToken({
+      idToken: tokens.id_token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
+
     const payload = ticket.getPayload();
+    const { email, name, sub: googleId } = payload;
 
-    if (!payload?.email) {
-      return res.status(400).json({ message: "Invalid Google token." });
-    }
-
-    const normalizedEmail = normalizeEmail(payload.email);
-    let user = await prisma.user.findUnique({ where: { email: normalizedEmail } });
+    let user = await prisma.user.findUnique({ where: { googleId } });
 
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          name: payload.name || normalizedEmail.split("@")[0],
-          email: normalizedEmail,
-          password: null,
-          googleId: payload.sub,
-        },
-      });
-    } else if (!user.googleId) {
-      // Existing password-based account signing in with Google for the first time — link it
-      user = await prisma.user.update({
-        where: { id: user.id },
-        data: { googleId: payload.sub },
-      });
+      user = await prisma.user.findUnique({ where: { email } });
+
+      if (user) {
+        user = await prisma.user.update({
+          where: { email },
+          data: { googleId },
+        });
+      } else {
+        user = await prisma.user.create({
+          data: { email, name, googleId },
+        });
+
+        // await seedStarterWardrobe(user.id);
+      }
     }
 
-    const safeUser = { id: user.id, email: user.email, name: user.name, tokenVersion: user.tokenVersion };
-    const token = signToken(safeUser);
-    res.cookie("token", token, getAuthCookieOptions());
-    return res.json({ message: "Login Successful", token, user: safeUser });
-  } catch (error) {
-    console.error("Google login error:", error.message);
-    return res.status(500).json({ message: "Server error during Google login." });
-  }
-}
+    const token = jwt.sign(
+      { id: user.id, tokenVersion: user.tokenVersion },
+      
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-export async function me(req, res) {
-  try {
-    const userId = req.user.id;
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, name: true, email: true },
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-    return res.json({ user });
-  } catch (error) {
-    console.error("Me error:", error.message);
-    return res.status(500).json({ message: "Server error fetching user data." });
-  }
-}
 
-export async function logout(req, res) {
-  try {
-    const userId = req.userId || req.user?.id;
-
-    if (userId) {
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          tokenVersion: { increment: 1 },
-        },
-      });
-    }
-
-    try {
-      res.clearCookie && res.clearCookie("token", getAuthCookieOptions());
-    } catch (e) {
-      // ignore cookie clearing errors
-    }
-
-    return res.json({ message: "Logout successful." });
-  } catch (error) {
-    console.error("Logout error:", error.message);
-    return res.status(500).json({ message: "Server error during logout." });
+    res.json({ success: true }); // only once now
+  } catch (err) {
+    console.error("Google auth error:", err);
+    res.status(401).json({ message: "Google authentication failed" });
   }
 }
