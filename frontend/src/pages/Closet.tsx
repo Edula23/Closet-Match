@@ -7,7 +7,7 @@ export default function Closet() {
     userId: number;
     fileName: string;
     mimeType: string;
-    image: string;
+    image: string; 
   }
   // interface Outfit {
   //   id: number;
