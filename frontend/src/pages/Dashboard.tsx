@@ -45,22 +45,21 @@ export default function Dashboard() {
     fetchCloset();
   }, []);
 
+  // ... inside your component
+  const navigate = useNavigate();
 
-// ... inside your component
-const navigate = useNavigate();
-
-const handleSignOut = async () => {
-  try {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-  } catch (error) {
-    console.error("Logout error:", error);
-  } finally {
-    navigate("/"); // back to hero/homepage
-  }
-}
+  const handleSignOut = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      navigate("/"); // back to hero/homepage
+    }
+  };
 
   const fetchOutfits = async () => {
     const res = await fetch("/api/outfits", {
@@ -111,6 +110,7 @@ const handleSignOut = async () => {
       alert(data.message);
     }
   };
+
   const createOutfit = async () => {
     const res = await fetch("/api/outfits/new", {
       method: "POST",
@@ -222,6 +222,32 @@ const handleSignOut = async () => {
     setMatchTargetItem(null);
     setMatchResult(null);
   };
+  const handleDeleteOutfit = async (outfitId: number) => {
+    const confirmed = window.confirm(
+      "Delete this outfit? This can't be undone.",
+    );
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/outfits/${outfitId}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+
+      if (!response.ok) {
+        console.error("Failed to delete outfit:", response.statusText);
+        return;
+      }
+
+      // Remove from local state so UI updates without a refetch
+      setOutfits((prev) => prev.filter((o) => o.id !== outfitId));
+
+      // Close the detail modal if it's open
+      setSelectedOutfit(null); // adjust to whatever your modal's state var is called
+    } catch (error) {
+      console.error("Error deleting outfit:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
@@ -240,9 +266,7 @@ const handleSignOut = async () => {
             Sign out
           </button>
           <Link to="/closet">
-            <button
-              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-            >
+            <button className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors">
               My Closet
             </button>
           </Link>
@@ -261,9 +285,7 @@ const handleSignOut = async () => {
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end items-end px-6 gap-3 pb-5 pt-2 text-sm">
           <Link className=" ml-auto" to="/closet">
-            <button
-              className="bg-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full"
-            >
+            <button className="bg-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full">
               My Closet
             </button>
           </Link>
@@ -406,7 +428,9 @@ const handleSignOut = async () => {
       {showMatchModal && matchResult && matchTargetItem && (
         <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-60 px-4">
           <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-            <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
+            <h2 className="text-lg font-semibold text-[#661218] mb-4">
+              Suggested match
+            </h2>
 
             <p className="text-xs font-medium text-gray-500 mb-2">
               Selected item
@@ -478,19 +502,21 @@ const handleSignOut = async () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg text-[#550f14] font-bold">{selectedOutfit.name}</h2>
+              <h2 className="text-lg text-[#550f14] font-bold">
+                {selectedOutfit.name}
+              </h2>
               <div className="flex gap-3 items-center">
                 <button
                   onClick={() => setIsEditing((prev) => !prev)}
-                  className="text-sm text-blue-500"
+                  className="text-sm text-blue-500 hover:bg-blue-50 px-4 py-2 rounded-full transition-colors"
                 >
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
                 <button
-                  onClick={() => setSelectedOutfit(null)}
-                  className="text-xl"
+                  onClick={() => handleDeleteOutfit(selectedOutfit.id)}
+                  className="px-4 py-2 text-sm rounded-full text-red-600 hover:bg-red-50 transition-colors"
                 >
-                  ✕
+                  Delete
                 </button>
               </div>
             </div>
