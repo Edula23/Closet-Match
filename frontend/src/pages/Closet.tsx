@@ -190,21 +190,6 @@ export default function Closet() {
   setShowMatchModal(false);
   setShowOutfitModal(true); // reuse your existing outfit modal
 };
-const logout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
-        window.location.href = "/login";
-      } else {
-        console.log("Logout failed");
-      }
-    } catch (err) {
-      console.log("Logout error:", err);
-    }
-  };
   const handleSignOut = async () => {
   try {
     await fetch("/api/auth/logout", {

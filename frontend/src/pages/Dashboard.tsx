@@ -223,22 +223,6 @@ const handleSignOut = async () => {
     setMatchResult(null);
   };
 
-  const logout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
-        window.location.href = "/login";
-      } else {
-        console.log("Logout failed");
-      }
-    } catch (err) {
-      console.log("Logout error:", err);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10 shadow-sm">

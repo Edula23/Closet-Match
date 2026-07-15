@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import heroimage2 from "../assets/heroImg2.jpg";
 // const navLinks = ["Home", "About", "Courses", "Contact"];
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { useGoogleLogin } from "@react-oauth/google";
 export default function HeroSection() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleGoogleAuthCode = async (codeResponse: { code: string }) => {
@@ -56,23 +53,7 @@ export default function HeroSection() {
             <FcGoogle />
            Sign in
           </button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden px-6 py-4 flex flex-col justify-end gap-4 text-sm text-gray-200">
-          <Link to="/signup" className="ml-auto">
-            <button className="mt-2 bg-[#661218] ml-auto hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full w-fit">
-              Sign Up
-            </button>
-          </Link>
-          <Link to="/login" className="ml-auto">
-            <button className="mt-2 border-2 border-[#661218] ml-auto hover:bg-blue-400 transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full w-fit">
-              Log In
-            </button>
-          </Link>
-        </div>
-      )}
+      </nav>      
 
       {/* Hero Content */}
       <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-2  pt-8 md:pt-50 pb-16 gap-16 max-w-7xl mx-auto">
