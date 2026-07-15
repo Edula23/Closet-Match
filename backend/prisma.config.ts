@@ -5,7 +5,7 @@ import { defineConfig } from "prisma/config";
 
 declare const process: {
   env: {
-    DATABASE_URL?: string;
+    DIRECT_URL?: string;
   };
 };
 
@@ -15,6 +15,6 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env.DATABASE_URL,
+    url: process.env.DIRECT_URL,
   },
 });

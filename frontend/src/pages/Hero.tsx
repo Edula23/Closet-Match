@@ -1,10 +1,40 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import heroimage2 from "../assets/heroImg2.jpg";
 // const navLinks = ["Home", "About", "Courses", "Contact"];
-
+import { useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from "@react-oauth/google";
 export default function HeroSection() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleGoogleAuthCode = async (codeResponse: { code: string }) => {
+    try {
+      const response = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ code: codeResponse.code }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        console.error(
+          "Google login failed:",
+          data?.message || response.statusText,
+        );
+        return;
+      }
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    flow: "auth-code",
+    onSuccess: handleGoogleAuthCode,
+    onError: () => console.error("Google login failed"),
+  });
 
   return (
     <section className="min-h-screen bg-[#d0cac3]  text-white font-sans overflow-hidden">
@@ -15,53 +45,15 @@ export default function HeroSection() {
           <span className="text-[#661218]">Match</span>
         </div>
 
-        {/* Desktop Nav */}
-        {/* <ul className="hidden md:flex gap-8 text-sm text-gray-300">
-          {navLinks.map((link) => (
-            <li key={link}>
-              <a href="#" className="hover:text-white transition-colors">
-                {link}
-              </a>
-            </li>
-          ))}
-        </ul> */}
-        <div className="hidden md:flex items-center gap-2">
-          <Link to="/login">
-            <button className=" border-[#661218] border-2 hover:bg-[#550f14] hover:text-white transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full">
-              Log in
-            </button>
-          </Link>
-          <Link to="/signup">
-            <button className="bg-[#661218] hover:bg-[#550f14] transition-colors text-white = text-sm font-medium px-5 py-2 rounded-full">
-              Sign Up
-            </button>
-          </Link>
-        </div>
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden text-[#661218] text-2xl"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? "✕" : "☰"}
-        </button>
-      </nav>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden px-6 py-4 flex flex-col justify-end gap-4 text-sm text-gray-200">
-          <Link to="/signup" className="ml-auto">
-            <button className="mt-2 bg-[#661218] ml-auto hover:bg-blue-400 transition-colors text-white text-sm font-medium px-5 py-2 rounded-full w-fit">
-              Sign Up
-            </button>
-          </Link>
-          <Link to="/login" className="ml-auto">
-            <button className="mt-2 border-2 border-[#661218] ml-auto hover:bg-blue-400 transition-colors text-[#661218] text-sm font-bold px-5 py-2 rounded-full w-fit">
-              Log In
-            </button>
-          </Link>
-        </div>
-      )}
+        
+          <button
+            onClick={() => googleLogin()}
+            className="flex items-center gap-2 border-2 border-[#661218] text-[#661218] hover:text-white px-3 py-2 rounded-full font-medium hover:bg-[#7a1620] transition-colors"
+          >
+            <FcGoogle />
+           Sign in
+          </button>
+      </nav>      
 
       {/* Hero Content */}
       <div className="flex flex-col md:flex-row items-center justify-between px-6 md:px-2  pt-8 md:pt-50 pb-16 gap-16 max-w-7xl mx-auto">
@@ -79,7 +71,9 @@ export default function HeroSection() {
                 </div>
               ))}
             </div> */}
-            <span className="text-xs text-[#200705] font-medium hidden md:block">#Fashion</span>
+            <span className="text-xs text-[#200705] font-medium hidden md:block">
+              #Fashion
+            </span>
           </div>
 
           {/* Headline */}
@@ -93,8 +87,8 @@ export default function HeroSection() {
 
           {/* Description */}
           <p className="text-sm sm:text-base text-[#200705] leading-relaxed max-w-sm">
-            ClosetMatch uses helps you discover outfit combinations from
-            the clothes you already own. Organize your wardrobe, create stylish
+            ClosetMatch uses helps you discover outfit combinations from the
+            clothes you already own. Organize your wardrobe, create stylish
             looks, and never wonder what to wear again.
           </p>
         </div>

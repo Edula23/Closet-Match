@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
 export default function Closet() {
   interface Closet {
     id: number;
     userId: number;
     fileName: string;
     mimeType: string;
-    image: string;
+    image: string; 
   }
   // interface Outfit {
   //   id: number;
@@ -55,7 +56,7 @@ export default function Closet() {
   //   setOutfits(data.outfits);
   //   console.log(data);
   // };
-
+  const navigate = useNavigate();
   const fetchCloset = async () => {
     const res = await fetch("/api/closet", {
       credentials: "include",
@@ -189,21 +190,18 @@ export default function Closet() {
   setShowMatchModal(false);
   setShowOutfitModal(true); // reuse your existing outfit modal
 };
-const logout = async () => {
-    try {
-      const res = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (res.ok) {
-        window.location.href = "/login";
-      } else {
-        console.log("Logout failed");
-      }
-    } catch (err) {
-      console.log("Logout error:", err);
-    }
-  };
+  const handleSignOut = async () => {
+  try {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
+  } finally {
+    navigate("/"); // back to hero/homepage
+  }
+}
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
@@ -216,10 +214,10 @@ const logout = async () => {
         {/* Desktop Nav */}
         <ul className="hidden md:flex gap-3 text-sm">
           <button
-            onClick={logout}
+            onClick={handleSignOut}
             className="px-4 py-2 rounded-full text-[#661218] hover:text-white font-medium border-[#661218] border-2 hover:bg-[#550f14] transition-colors"
           >
-            Logout
+            Sign out
           </button>
           <Link to="/dashboard">
             <button
@@ -250,12 +248,12 @@ const logout = async () => {
           </Link>
           <button
             onClick={() => {
-              logout();
+              handleSignOut();
               setMenuOpen(false);
             }}
             className=" border-2 border-[#661218] ml:auto hover:bg-[#550f14] transition-colors text-[#661218] = text-sm font-medium px-5 py-2 rounded-full"
           >
-            Logout
+            Sign out
           </button>
         </div>
       )}
