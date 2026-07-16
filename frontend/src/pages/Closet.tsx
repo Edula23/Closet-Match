@@ -7,7 +7,7 @@ export default function Closet() {
     userId: number;
     fileName: string;
     mimeType: string;
-    image: string; 
+    image: string;
   }
   // interface Outfit {
   //   id: number;
@@ -19,6 +19,7 @@ export default function Closet() {
   // }
   const [closets, setCloset] = useState<Closet[]>([]);
   // const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [closetsLoading, setClosetsLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -58,17 +59,21 @@ export default function Closet() {
   // };
   const navigate = useNavigate();
   const fetchCloset = async () => {
-    const res = await fetch("/api/closet", {
-      credentials: "include",
-    });
-    if (!res.ok) {
-      console.log("Couldn't fetch closet");
-      return;
-    }
+    try {
+      const res = await fetch("/api/closet", {
+        credentials: "include",
+      });
+      if (!res.ok) {
+        console.log("Couldn't fetch closet");
+        return;
+      }
 
-    const data = await res.json();
-    console.log(data);
-    setCloset(data.closets);
+      const data = await res.json();
+      console.log(data);
+      setCloset(data.closets);
+    } finally {
+      setClosetsLoading(false);
+    }
   };
 
   const uploadClothing = async () => {
@@ -181,27 +186,27 @@ export default function Closet() {
     }
   };
   const saveMatchAsOutfit = () => {
-  if (!matchTargetItem || !matchResult) return;
+    if (!matchTargetItem || !matchResult) return;
 
-  const matchedIds = matchResult.suggested_item_ids.map((id) => Number(id));
-  const allIds = [matchTargetItem.id, ...matchedIds];
+    const matchedIds = matchResult.suggested_item_ids.map((id) => Number(id));
+    const allIds = [matchTargetItem.id, ...matchedIds];
 
-  setSelectedClosetIds(allIds);
-  setShowMatchModal(false);
-  setShowOutfitModal(true); // reuse your existing outfit modal
-};
+    setSelectedClosetIds(allIds);
+    setShowMatchModal(false);
+    setShowOutfitModal(true); // reuse your existing outfit modal
+  };
   const handleSignOut = async () => {
-  try {
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-  } catch (error) {
-    console.error("Logout error:", error);
-  } finally {
-    navigate("/"); // back to hero/homepage
-  }
-}
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      navigate("/"); // back to hero/homepage
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
@@ -220,9 +225,7 @@ export default function Closet() {
             Sign out
           </button>
           <Link to="/dashboard">
-            <button
-              className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors"
-            >
+            <button className="px-4 py-2 rounded-full border border-white/20 bg-[#661218] hover:bg-[#550f14] transition-colors">
               My Outfits
             </button>
           </Link>
@@ -240,7 +243,6 @@ export default function Closet() {
 
       {menuOpen && (
         <div className="md:hidden flex flex-col justify-end items-end px-6 gap-3 pt-2 pb-5 text-sm">
-          
           <Link to="/dashboard" className=" ml-auto">
             <button className="bg-[#661218] text-white  ml:auto hover:bg-[#550f14] transition-colors text-sm font-medium px-5 py-2 rounded-full">
               My Outfits
@@ -373,129 +375,161 @@ export default function Closet() {
       )}
 
       {showMatchModal && matchResult && matchTargetItem && (
-  <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
-    <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
-      <h2 className="text-lg font-semibold text-[#661218] mb-4">Suggested match</h2>
+        <div className="fixed inset-0 bg-black/50 backdrop:blur-sm flex items-center justify-center z-50 px-4">
+          <div className="bg-white text-gray-900 p-6 rounded-2xl w-full max-w-md shadow-xl">
+            <h2 className="text-lg font-semibold text-[#661218] mb-4">
+              Suggested match
+            </h2>
 
-      <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
-        <img
-          src={matchTargetItem.image}
-          alt={matchTargetItem.fileName}
-          className="w-full h-full object-cover"
-        />
-      </div>
-
-      <p className="text-center text-xs text-gray-400 mb-3">pairs well with</p>
-
-      <div className="grid grid-cols-3 gap-2 mb-4">
-        {closets
-          .filter((item) => matchResult.suggested_item_ids.includes(String(item.id)))
-          .map((item) => (
-            <div key={item.id} className="aspect-square rounded-lg overflow-hidden">
-              <img src={item.image} alt={item.fileName} className="w-full h-full object-cover" />
+            <div className="w-24 aspect-square rounded-lg overflow-hidden mb-4 border-2 border-[#661218] mx-auto">
+              <img
+                src={matchTargetItem.image}
+                alt={matchTargetItem.fileName}
+                className="w-full h-full object-cover"
+              />
             </div>
-          ))}
-      </div>
 
-      <p className="text-sm text-gray-600 mb-5">{matchResult.reasoning}</p>
+            <p className="text-center text-xs text-gray-400 mb-3">
+              pairs well with
+            </p>
 
-      <div className="flex justify-end gap-2">
-        <button
-          onClick={() => {
-            setShowMatchModal(false);
-            setMatchTargetItem(null);
-            setMatchResult(null);
-          }}
-          className="px-4 py-2 text-sm rounded-full border border-gray-300 hover:bg-gray-50"
-        >
-          Close
-        </button>
-        <button
-          onClick={saveMatchAsOutfit}
-          className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
-        >
-          Save as Outfit
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+            <div className="grid grid-cols-3 gap-2 mb-4">
+              {closets
+                .filter((item) =>
+                  matchResult.suggested_item_ids.includes(String(item.id)),
+                )
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    className="aspect-square rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+            </div>
+
+            <p className="text-sm text-gray-600 mb-5">
+              {matchResult.reasoning}
+            </p>
+
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setShowMatchModal(false);
+                  setMatchTargetItem(null);
+                  setMatchResult(null);
+                }}
+                className="px-4 py-2 text-sm rounded-full border border-gray-300 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={saveMatchAsOutfit}
+                className="px-4 py-2 text-sm rounded-full bg-[#661218] text-white hover:bg-[#550f14]"
+              >
+                Save as Outfit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">My Closet</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
-            {closets.map((item) => (
-              <div key={item.id} className="relative aspect-square group">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (longPressId === item.id) return;
-                    toggleCloset(item.id);
-                  }}
-                  onTouchStart={() => startPress(item.id)}
-                  onTouchEnd={cancelPress}
-                  className={`w-full h-full rounded-lg overflow-hidden bg-white/5 `}
-                >
-                  <img
-                    src={item.image}
-                    alt={item.fileName}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-
-                {/* Desktop: hover-reveal delete button */}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteClothing(item.id);
-                  }}
-                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full items-center justify-center text-xs"
-                  aria-label="Delete item"
-                >
-                  ✕
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    matchOutfit(item.id);
-                  }}
-                  className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-[#661218] text-white w-6 h-6 rounded-full items-center justify-center text-xs"
-                  aria-label="Match with closet"
-                >
-                  ✨
-                </button>
-
-                {/* Mobile: long-press delete overlay */}
-                {/* Mobile: long-press delete/match overlay */}
-                {longPressId === item.id && (
-                  <div
-                    className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-6 rounded-lg sm:hidden"
-                    onClick={(e) => e.stopPropagation()}
+          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">
+            My Closet
+          </h2>
+          {!closetsLoading && closets.length === 0 && (
+            <div className="text-center py-16">
+              <p className="text-sm text-[#661218] mb-4">
+                No clothes yet — upload one from your wardrobe to get started.
+              </p>
+              <button
+                onClick={() => setShowUploadModal(true)}
+                className="px-5 py-2.5 rounded-full bg-[#661218] text-white text-sm font-medium hover:bg-[#550f14] transition-colors"
+              >
+                + Add Closet Item
+              </button>
+            </div>
+          )}
+          {closets.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+              {closets.map((item) => (
+                <div key={item.id} className="relative aspect-square group">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (longPressId === item.id) return;
+                      toggleCloset(item.id);
+                    }}
+                    onTouchStart={() => startPress(item.id)}
+                    onTouchEnd={cancelPress}
+                    className={`w-full h-full rounded-lg overflow-hidden bg-white/5 `}
                   >
-                    <button
-                      onClick={() => matchOutfit(item.id)}
-                      className="bg-[#661218] text-white text-xs px-4 py-2 rounded-md w-30"
+                    <img
+                      src={item.image}
+                      alt={item.fileName}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+
+                  {/* Desktop: hover-reveal delete button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteClothing(item.id);
+                    }}
+                    className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full items-center justify-center text-xs"
+                    aria-label="Delete item"
+                  >
+                    ✕
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      matchOutfit(item.id);
+                    }}
+                    className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity absolute top-1 left-1 bg-[#661218] text-white w-6 h-6 rounded-full items-center justify-center text-xs"
+                    aria-label="Match with closet"
+                  >
+                    ✨
+                  </button>
+
+                  {/* Mobile: long-press delete overlay */}
+                  {/* Mobile: long-press delete/match overlay */}
+                  {longPressId === item.id && (
+                    <div
+                      className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-6 rounded-lg sm:hidden"
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      ✨ Match
-                    </button>
-                    <button
-                      onClick={() => deleteClothing(item.id)}
-                      className="bg-red-500 text-white text-xs px-4 py-2 rounded-md w-30"
-                    >
-                      Delete
-                    </button>
-                    <button
-                      onClick={() => setLongPressId(null)}
-                      className="absolute top-1 right-1 text-white text-sm"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+                      <button
+                        onClick={() => matchOutfit(item.id)}
+                        className="bg-[#661218] text-white text-xs px-4 py-2 rounded-md w-30"
+                      >
+                        ✨ Match
+                      </button>
+                      <button
+                        onClick={() => deleteClothing(item.id)}
+                        className="bg-red-500 text-white text-xs px-4 py-2 rounded-md w-30"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => setLongPressId(null)}
+                        className="absolute top-1 right-1 text-white text-sm"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </div>
     </div>
