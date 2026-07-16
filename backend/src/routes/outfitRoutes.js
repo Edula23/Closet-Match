@@ -4,7 +4,7 @@ import { authMiddleware } from "../middleware/authMiddleware.js";
 import {
     postOutfit, getOutfits, getOutfit, deleteOutfit, updateOutfit
 } from "../controllers/outfitController.js";
-import { suggestOutfit } from "../controllers/outfitController.js";
+import { suggestOutfit, saveStarterOutfit } from "../controllers/outfitController.js";
 
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -16,6 +16,7 @@ router.get("/", authMiddleware, getOutfits);
 router.get("/:id", authMiddleware, getOutfit);
 router.put("/:id", authMiddleware, upload.any(), updateOutfit);
 router.post("/suggest", authMiddleware, suggestOutfit);
+router.post("/starter", authMiddleware, saveStarterOutfit);
 router.delete("/:id", authMiddleware, deleteOutfit);
 
 
