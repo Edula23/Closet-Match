@@ -1,5 +1,6 @@
 import prisma from '../prismaClient.js';
 import { getOutfitSuggestion } from '../services/aiMatch.js';
+import crypto from "crypto";
 function parseIntegerList(value) {
 	if (Array.isArray(value)) {
 		return value
@@ -338,5 +339,60 @@ export async function suggestOutfit(req, res) {
 		res.status(500).json({ message: "Failed to generate suggestion" });
 	}
 }
+// controllers/outfitController.js (or wherever your outfit routes live)
+export async function saveStarterOutfit(req, res) {
+  try {
+    const userId = req.userId || req.user?.id;
+    const { name, items } = req.body; // items: [{ name, imageUrl }]
 
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized." });
+    }
+
+    if (!items?.length) {
+      return res.status(400).json({ message: "Missing data" });
+    }
+
+    // Download each image and store as Buffer, matching your existing Bytes schema
+    const createdItems = await Promise.all(
+      items.map(async (item) => {
+        const imgRes = await fetch(item.imageUrl);
+        if (!imgRes.ok) throw new Error(`Failed to fetch ${item.imageUrl}`);
+
+        const arrayBuffer = await imgRes.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const mimeType = imgRes.headers.get("content-type") || "image/jpeg";
+        const imageHash = crypto.createHash("sha256").update(buffer).digest("hex");
+
+        return prisma.closet.create({
+          data: {
+            userId,
+            fileName: `${item.name.replace(/\s+/g, "-").toLowerCase()}.jpg`,
+            mimeType,
+            image: buffer,
+            imageHash,
+          },
+        });
+      })
+    );
+
+    const closetIds = createdItems.map((c) => c.id);
+
+    const createdOutfitRows = await prisma.$queryRaw`
+      INSERT INTO "Outfit" ("userId", "name", "description", "closetIds", "createdAt", "updatedAt")
+      VALUES (${userId}, ${name}, ${""}, ${JSON.stringify(closetIds)}::jsonb, NOW(), NOW())
+      RETURNING "id", "userId", "name", "description", "closetIds", "createdAt", "updatedAt"
+    `;
+
+    const createdOutfit = createdOutfitRows[0];
+
+    return res.status(201).json({
+      message: "Starter outfit created successfully.",
+      outfit: formatOutfit(createdOutfit, createdItems),
+    });
+  } catch (error) {
+    console.error("Save starter outfit error:", error.message);
+    return res.status(500).json({ message: "Couldn't save outfit." });
+  }
+}
 

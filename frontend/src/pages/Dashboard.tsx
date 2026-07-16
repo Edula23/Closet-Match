@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import StarterOutfits from "../components/StarterOutfits";
 export default function Dashboard() {
   interface Closet {
     id: number;
@@ -18,6 +19,7 @@ export default function Dashboard() {
     closetItems: Closet[];
   }
   const [outfits, setOutfits] = useState<Outfit[]>([]);
+  const [outfitsLoading, setOutfitsLoading] = useState(true);
   const [closets, setCloset] = useState<Closet[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -62,17 +64,21 @@ export default function Dashboard() {
   };
 
   const fetchOutfits = async () => {
-    const res = await fetch("/api/outfits", {
-      credentials: "include",
-    });
+    try {
+      const res = await fetch("/api/outfits", {
+        credentials: "include",
+      });
 
-    if (!res.ok) {
-      console.log("Couldn't fetch outfits");
-      return;
+      if (!res.ok) {
+        console.log("Couldn't fetch outfits");
+        return;
+      }
+
+      const data = await res.json();
+      setOutfits(data.outfits);
+    } finally {
+      setOutfitsLoading(false);
     }
-
-    const data = await res.json();
-    setOutfits(data.outfits);
   };
 
   const fetchCloset = async () => {
@@ -589,12 +595,22 @@ export default function Dashboard() {
             My outfits
           </h1>
 
-          {outfits.length === 0 && (
-            <p className="text-sm text-[#551214] mb-6">
-              No outfits yet create one from your closet items.
-            </p>
+          {!outfitsLoading && outfits.length === 0 && (
+            <div>
+              <p className="text-sm text-[#551214] mb-6">
+                No outfits yet create one from your closet items.
+              </p>
+              <StarterOutfits
+                onSaved={() => {
+                  fetchCloset();
+                  fetchOutfits();
+                }}
+              />
+            </div>
           )}
-
+          {outfitsLoading && (
+            <p className="text-sm text-[#551214]">Loading your outfits…</p>
+          )}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
             {outfits.map((outfit) => (
               <div
