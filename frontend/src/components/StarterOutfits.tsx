@@ -80,24 +80,24 @@ export default function StarterOutfits({ onSaved }: Props) {
 
   return (
     <section className="mb-12">
-  <h2 className="text-lg font-semibold mb-4 text-[#661218]">
+  <h2 className="text-sm mb-4 text-[#661218]">
     Try one of these to get started
   </h2>
   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
     {visible.map((outfit) => (
       <div
         key={outfit.id}
-        className="relative hover:shadow-md rounded-2xl p-4 flex flex-col items-center text-center"
+        className="relative hover:shadow-md rounded-2xl p-4 flex flex-col items-center text-center border border-[#aea8a1]"
       >
         <button
           onClick={() => dismiss(outfit.id)}
-          className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white text-[#661218] text-sm flex items-center justify-center hover:bg-gray-100"
+          className="absolute top-2 right-2 w-6 h-6 rounded-full  text-[#661218] text-sm flex items-center justify-center hover:bg-gray-100"
           aria-label="Dismiss"
         >
           ✕
         </button>
 
-        <p className="text-sm font-medium text-[#661218] mb-4">
+        <p className="text-sm font-medium mr-auto text-[#661218] mb-4">
           {outfit.label}
         </p>
 
@@ -131,7 +131,7 @@ export default function StarterOutfits({ onSaved }: Props) {
         <button
           onClick={() => save(outfit)}
           disabled={saving === outfit.id}
-          className="px-4 bg-[#661218] text-white text-sm py-2 rounded-full hover:bg-[#550f14] disabled:opacity-50"
+          className="px-4 border-[#661218] border-2 text-[#661218] text-sm py-1.5 ml-auto rounded-full hover:bg-[#550f14] hover:text-white disabled:opacity-50"
         >
           {saving === outfit.id ? "Saving..." : "Save"}
         </button>

@@ -440,22 +440,25 @@ export default function Closet() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section>
-          <h2 className="text-2xl font-semibold mb-6 text-[#661218]">
-            My Closet
-          </h2>
-          {!closetsLoading && closets.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-sm text-[#661218] mb-4">
-                No clothes yet — upload one from your wardrobe to get started.
-              </p>
-              <button
-                onClick={() => setShowUploadModal(true)}
-                className="px-5 py-2.5 rounded-full bg-[#661218] text-white text-sm font-medium hover:bg-[#550f14] transition-colors"
-              >
-                + Add Closet Item
-              </button>
-            </div>
+          {closets.length > 0 && (
+            <h2 className="text-2xl font-semibold mb-6 text-[#661218]">
+              My Closet
+            </h2>
           )}
+          {!closetsLoading && closets.length === 0 && (
+  <div className="text-start py-16">
+    <p className="text-sm text-[#661218] mb-4">
+      No clothes yet,{" "}
+      <button
+        onClick={() => setShowUploadModal(true)}
+        className="underline underline-offset-2 hover:text-[#8a1c24] transition cursor-pointer"
+      >
+        upload 
+      </button>{" "}
+      one from your wardrobe to get started.
+    </p>
+  </div>
+)}
           {closets.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
               {closets.map((item) => (

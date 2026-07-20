@@ -591,14 +591,16 @@ export default function Dashboard() {
 
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section className="mb-12">
-          <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
-            My outfits
-          </h1>
+          {outfits.length > 0 && (
+      <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
+        My outfits
+      </h1>
+    )}
 
           {!outfitsLoading && outfits.length === 0 && (
             <div>
-              <p className="text-sm text-[#551214] mb-6">
-                No outfits yet create one from your closet items.
+              <p className="text-lg font-semibold text-[#551214] mb-6">
+                No outfits yet create one from your <Link to="/closet"><span className="text-[#661218] underline">closet</span></Link> items.
               </p>
               <StarterOutfits
                 onSaved={() => {
