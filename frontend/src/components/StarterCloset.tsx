@@ -19,7 +19,7 @@ const STARTER_ITEMS: StarterClothingItem[] = [
   },
   {
     id: "starter-tshirt",
-    label: "White tee",
+    label: "White T-shirt",
     category: "t-shirt",
     imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400",
   },

@@ -22,7 +22,7 @@ const STARTER_OUTFITS: StarterOutfit[] = [
     id: "starter-men",
     label: "Casual look",
     items: [
-      { name: "White tee", imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400" },
+      { name: "White T-shirt", imageUrl: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400" },
       { name: "Blue jeans", imageUrl: "https://images.unsplash.com/photo-1542272604-787c3835535d?w=400" },
     ],
   },

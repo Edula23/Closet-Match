@@ -447,8 +447,8 @@ export default function Closet() {
             </h2>
           )}
           {!closetsLoading && closets.length === 0 && (
-            <div className="text-start py-16">
-              <p className="text-sm text-[#661218] mb-4">
+            <div className="text-start">
+              <p className="text-sm text-[#661218] mb-8">
                 No clothes yet,{" "}
                 <button
                   onClick={() => setShowUploadModal(true)}
@@ -456,7 +456,7 @@ export default function Closet() {
                 >
                   upload
                 </button>{" "}
-                one from your wardrobe to get started.
+                one from your wardrobe.
               </p>
               <StarterCloset
                 onSaved={() => {
