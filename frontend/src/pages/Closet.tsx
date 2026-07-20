@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
+import StarterCloset from "../components/StarterCloset";
 export default function Closet() {
   interface Closet {
     id: number;
@@ -446,19 +447,23 @@ export default function Closet() {
             </h2>
           )}
           {!closetsLoading && closets.length === 0 && (
-  <div className="text-start py-16">
-    <p className="text-sm text-[#661218] mb-4">
-      No clothes yet,{" "}
-      <button
-        onClick={() => setShowUploadModal(true)}
-        className="underline underline-offset-2 hover:text-[#8a1c24] transition cursor-pointer"
-      >
-        upload 
-      </button>{" "}
-      one from your wardrobe to get started.
-    </p>
-  </div>
-)}
+            <div className="text-start py-16">
+              <p className="text-sm text-[#661218] mb-4">
+                No clothes yet,{" "}
+                <button
+                  onClick={() => setShowUploadModal(true)}
+                  className="underline underline-offset-2 hover:text-[#8a1c24] transition cursor-pointer"
+                >
+                  upload
+                </button>{" "}
+                one from your wardrobe to get started.
+              </p>
+              <StarterCloset
+                onSaved={() => {
+                  fetchCloset(); }}
+              />
+            </div>
+          )}
           {closets.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
               {closets.map((item) => (

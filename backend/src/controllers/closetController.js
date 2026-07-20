@@ -197,3 +197,56 @@ export async function deleteCloset(req, res) {
         return res.status(500).json({ message: "Server error deleting closet item." });
     }
 }
+
+export async function postClosetStarter(req, res) {
+    try {
+        const userId = req.userId || req.user?.id;
+        const { category, fileName, imageUrl } = req.body;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized." });
+        }
+
+        if (!imageUrl) {
+            return res.status(400).json({ message: "imageUrl is required." });
+        }
+
+        const imageRes = await fetch(imageUrl);
+        if (!imageRes.ok) {
+            throw new Error(`Failed to fetch starter image: ${imageRes.status}`);
+        }
+
+        const arrayBuffer = await imageRes.arrayBuffer();
+        const imageBuffer = Buffer.from(arrayBuffer);
+        const mimeType = imageRes.headers.get("content-type") || "image/jpeg";
+        const imageHash = crypto.createHash("sha256").update(imageBuffer).digest("hex");
+
+        const closetItem = await prisma.closet.create({
+            data: {
+                userId,
+                image: imageBuffer,
+                fileName: fileName || category || null,
+                mimeType,
+                imageHash,
+            },
+            select: {
+                id: true,
+                userId: true,
+                fileName: true,
+                mimeType: true,
+                imageHash: true,
+                image: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+
+        return res.status(201).json({
+            message: "Starter item saved to closet.",
+            closet: closetItem,
+        });
+    } catch (error) {
+        console.error("postClosetStarter error:", error.message);
+        return res.status(500).json({ message: "Server error saving starter closet item." });
+    }
+}
