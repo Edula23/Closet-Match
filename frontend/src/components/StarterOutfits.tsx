@@ -14,7 +14,7 @@ const STARTER_OUTFITS: StarterOutfit[] = [
     id: "starter-women",
     label: "Everyday look",
     items: [
-      { name: "Summer dress", imageUrl: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=400" },
+      { name: "Summer dress", imageUrl: "https://images.unsplash.com/photo-1731414571128-805aa0c2dfd5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" },
       { name: "White sneakers", imageUrl: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400" },
     ],
   },
