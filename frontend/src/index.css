@@ -1,1 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Jim+Nightshade&display=swap');
 @import "tailwindcss";
+
+.jim-nightshade-regular {
+  font-family: "Jim Nightshade", cursive;
+  font-weight: 800;
+  font-style: normal;
+  font-size: extra-large;
+}

@@ -255,9 +255,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#d0cac3] text-white font-sans">
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 border-b border-white/10 shadow-sm">
-        <div className="text-xl font-bold tracking-tight">
-          <span className="text-[#661218]">Closet</span>
-          <span className="text-[#661218]">Match</span>
+        <div className="text-3xl font-bold tracking-tight">
+          <span className="text-[#661218] jim-nightshade-regular">Closet</span>
+          <span className="text-[#661218] jim-nightshade-regular">Match</span>
         </div>
 
         {/* Desktop Nav */}
