@@ -40,9 +40,9 @@ export default function HeroSection() {
     <section className="min-h-screen bg-[#d0cac3]  text-white font-sans overflow-hidden">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 md:px-12 py-5 shadow-sm">
-        <div className="text-xl font-bold tracking-tight">
-          <span className="text-[#661218]">Closet</span>
-          <span className="text-[#661218]">Match</span>
+        <div className="text-3xl font-bold tracking-tight">
+          <span className="text-[#661218] jim-nightshade-regular">Closet</span>
+          <span className="text-[#661218] jim-nightshade-regular">Match</span>
         </div>
 
         
@@ -77,8 +77,8 @@ export default function HeroSection() {
           </div>
 
           {/* Headline */}
-          <h1 className="text-3xl sm:text-5xl md:text-4xl font-bold leading-tight text-[#661218]">
-            <span className="text-[#661218] text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-4xl font-bold leading-tight  text-[#661218]">
+            <span className="text-[#661218] text-6xl sm:text-8xl md:text-8xl font-extrabold jim-nightshade-regular leading-tight">
               Dress Smarter
             </span>{" "}
             with Your Own Closet
