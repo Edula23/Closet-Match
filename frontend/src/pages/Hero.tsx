@@ -87,7 +87,7 @@ export default function HeroSection() {
 
           {/* Description */}
           <p className="text-sm sm:text-base text-[#200705] leading-relaxed max-w-sm">
-            ClosetMatch uses helps you discover outfit combinations from the
+            ClosetMatch helps you discover outfit combinations from the
             clothes you already own. Organize your wardrobe, create stylish
             looks, and never wonder what to wear again.
           </p>
