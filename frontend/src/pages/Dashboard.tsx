@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import StarterOutfits from "../components/StarterOutfits";
+import ConfirmDialog from "../components/ConfirmDialog";
 export default function Dashboard() {
   interface Closet {
     id: number;
@@ -228,12 +229,9 @@ export default function Dashboard() {
     setMatchTargetItem(null);
     setMatchResult(null);
   };
-  const handleDeleteOutfit = async (outfitId: number) => {
-    const confirmed = window.confirm(
-      "Delete this outfit? This can't be undone.",
-    );
-    if (!confirmed) return;
+  const [outfitToDelete, setOutfitToDelete] = useState<number | null>(null);
 
+  const handleDeleteOutfit = async (outfitId: number) => {
     try {
       const response = await fetch(`/api/outfits/${outfitId}`, {
         method: "DELETE",
@@ -245,13 +243,12 @@ export default function Dashboard() {
         return;
       }
 
-      // Remove from local state so UI updates without a refetch
       setOutfits((prev) => prev.filter((o) => o.id !== outfitId));
-
-      // Close the detail modal if it's open
-      setSelectedOutfit(null); // adjust to whatever your modal's state var is called
+      setSelectedOutfit(null); // close detail modal if open
     } catch (error) {
       console.error("Error deleting outfit:", error);
+    } finally {
+      setOutfitToDelete(null); // close the confirm dialog either way
     }
   };
 
@@ -519,7 +516,7 @@ export default function Dashboard() {
                   {isEditing ? "Cancel" : "Edit"}
                 </button>
                 <button
-                  onClick={() => handleDeleteOutfit(selectedOutfit.id)}
+                  onClick={() => setOutfitToDelete(selectedOutfit.id)}
                   className="px-4 py-2 text-sm rounded-full text-red-600 hover:bg-red-50 transition-colors"
                 >
                   Delete
@@ -592,15 +589,19 @@ export default function Dashboard() {
       <div className="max-w-5xl mx-auto px-6 md:px-12 py-10">
         <section className="mb-12">
           {outfits.length > 0 && (
-      <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
-        My outfits
-      </h1>
-    )}
+            <h1 className="text-2xl font-semibold mb-6 text-[#661218]">
+              My outfits
+            </h1>
+          )}
 
           {!outfitsLoading && outfits.length === 0 && (
             <div>
               <p className="text-lg font-semibold text-[#551214] mb-6">
-                No outfits yet create one from your <Link to="/closet"><span className="text-[#661218] underline">closet</span></Link> items.
+                No outfits yet create one from your{" "}
+                <Link to="/closet">
+                  <span className="text-[#661218] underline">closet</span>
+                </Link>{" "}
+                items.
               </p>
               <StarterOutfits
                 onSaved={() => {
@@ -653,6 +654,15 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+          <ConfirmDialog
+            open={outfitToDelete !== null}
+            title="Delete this outfit?"
+            description="This can't be undone."
+            onConfirm={() =>
+              outfitToDelete !== null && handleDeleteOutfit(outfitToDelete)
+            }
+            onCancel={() => setOutfitToDelete(null)}
+          />
         </section>
       </div>
     </div>
