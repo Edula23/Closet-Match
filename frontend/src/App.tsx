@@ -11,8 +11,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HeroSection />} />
-        {/* <Route path="/signup" element={<SignupPage />} /> */}
-        {/* <Route path="/login" element={<LoginPage />} /> */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/closet" element={<Closet/>} />
       </Routes>
