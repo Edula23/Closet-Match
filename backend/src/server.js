@@ -24,7 +24,7 @@ app.use(express.json());
 //tells express to serve all files from the public folder as static assets/files. Any requests for the css  files will be served from the public folder
 app.use(cookieParser());
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: 'https://closet-match-flame.vercel.app/', // Replace with your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Allow cookies to be sent
